@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">CS310 Sanjana Ilango (ilango)</string>
-    <string name = "message">Fight On!</string>
+    <string name="message">Fight On!</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
