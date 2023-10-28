@@ -1,10 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity"
+    tools:context=".Reservation"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        >
+        <ImageView
+            android:id="@+id/imgView"
+            android:layout_width="46dp"
+            android:layout_height="65dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/seatlogo"
+            />
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="125dp"
+            android:textSize="30dp"
+            android:text="Map"
+            android:fontFamily="@font/dmsans"
+            android:textColor="@color/black"
+            android:gravity="center_vertical"
+            />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/root_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="-15dp"
+        android:layout_marginBottom="15dp">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MapsActivity"
     />
+
+    <LinearLayout
+        android:id="@+id/overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/map"
+            android:fontFamily="@font/dmsans"
+            android:text="Taper Hall"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:id="@+id/buildingName"
+            android:layout_marginBottom="1dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/dmsans"
+            android:text="Taper Hall is a common classroom and workspace for students. It is a quiet building with 3 floors and located near the main USC campus entrance."
+            android:textColor="#737373"
+            android:textSize="15dp"
+            android:id="@+id/buildingDescription"
+            android:layout_marginBottom="3dp"
+            />
+
+        <Button
+            android:id="@+id/buttonReserve"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_gravity="right"
+            android:backgroundTint="#8A00C2"
+            android:fontFamily="@font/dmsans"
+            android:text="Make Reservation"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            app:cornerRadius="10dp"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
+
+    </FrameLayout>
+</LinearLayout>
