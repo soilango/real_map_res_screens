@@ -12,11 +12,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class Reservation extends AppCompatActivity {
+public class Reservation extends AppCompatActivity implements View.OnClickListener {
 
     boolean outdoorSelected = true;
 
     private ArrayList<TextView> cell_tvs;
+
+    private ArrayList<TextView> cell_tvs_indoor;
 
     private ArrayList<String> selected_cells_idx;
 
@@ -27,6 +29,14 @@ public class Reservation extends AppCompatActivity {
     private int findIndexOfCellTextView(TextView tv) {
         for (int n=0; n<cell_tvs.size(); n++) {
             if (cell_tvs.get(n) == tv)
+                return n;
+        }
+        return -1;
+    }
+
+    private int findIndexofCellTextViewIndoor(TextView tv) {
+        for (int n=0; n<cell_tvs_indoor.size(); n++) {
+            if (cell_tvs_indoor.get(n) == tv)
                 return n;
         }
         return -1;
@@ -46,10 +56,11 @@ public class Reservation extends AppCompatActivity {
         cell_tvs = new ArrayList<>();
         selected_cells_idx = new ArrayList<>();
         selected_cells_idx_indoor = new ArrayList<>();
+        cell_tvs_indoor = new ArrayList<>();
 
         androidx.gridlayout.widget.GridLayout grid = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout01);
 
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < 25; i++) {
             for (int j = 0; j < 6; j++) {
                 TextView tv = new TextView(this);
                 tv.setHeight( dpToPixel(32) );
@@ -58,7 +69,7 @@ public class Reservation extends AppCompatActivity {
                 tv.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
                 tv.setTextColor(Color.WHITE);
                 tv.setBackgroundColor(Color.parseColor("#8A00C2"));
-                tv.setOnClickListener(this::onClickTV);
+                tv.setOnClickListener(this);
 
                 tv.getBackground().setAlpha(125);
                 tv.setText("1");
@@ -69,7 +80,7 @@ public class Reservation extends AppCompatActivity {
                 }
                 else if (i == 0) {
                     tv.setBackgroundColor(Color.WHITE);
-                    tv.setTextColor(Color.BLACK);
+                    tv.setTextColor(Color.parseColor("#737373"));
                     if (j == 1) {
                         tv.setText("M");
                     }
@@ -87,9 +98,81 @@ public class Reservation extends AppCompatActivity {
                     }
                 }
                 else if (j == 0) {
-                    tv.setText("8:00-8:30am");
+                    if (i == 1) {
+                        tv.setText("8:00-8:30am");
+                    }
+                    else if (i == 2) {
+                        tv.setText("8:30-9:00am");
+                    }
+                    else if (i == 3) {
+                        tv.setText("9:00-9:30am");
+                    }
+                    else if (i == 4) {
+                        tv.setText("9:30-10:00am");
+                    }
+                    else if (i == 5) {
+                        tv.setText("10:00-10:30am");
+                    }
+                    else if (i == 6) {
+                        tv.setText("10:30-11:00am");
+                    }
+                    else if (i == 7) {
+                        tv.setText("11:00-11:30am");
+                    }
+                    else if (i == 8) {
+                        tv.setText("11:30-12:00pm");
+                    }
+                    else if (i == 9) {
+                        tv.setText("12:00-12:30pm");
+                    }
+                    else if (i == 10) {
+                        tv.setText("12:30-1:00pm");
+                    }
+                    else if (i == 11) {
+                        tv.setText("1:00-1:30pm");
+                    }
+                    else if (i == 12) {
+                        tv.setText("1:30-2:00pm");
+                    }
+                    else if (i == 13) {
+                        tv.setText("2:00-2:30pm");
+                    }
+                    else if (i == 14) {
+                        tv.setText("2:30-3:00pm");
+                    }
+                    else if (i == 15) {
+                        tv.setText("3:00-3:30pm");
+                    }
+                    else if (i == 16) {
+                        tv.setText("3:30-4:00pm");
+                    }
+                    else if (i == 17) {
+                        tv.setText("4:00-4:30pm");
+                    }
+                    else if (i == 18) {
+                        tv.setText("4:30-5:00pm");
+                    }
+                    else if (i == 19) {
+                        tv.setText("5:00-5:30pm");
+                    }
+                    else if (i == 20) {
+                        tv.setText("5:30-6:00pm");
+                    }
+                    else if (i == 21) {
+                        tv.setText("6:00-6:30pm");
+                    }
+                    else if (i == 22) {
+                        tv.setText("6:30-7:00pm");
+                    }
+                    else if (i == 23) {
+                        tv.setText("7:00-7:30pm");
+                    }
+                    else if (i == 24) {
+                        tv.setText("7:30-8:00pm");
+                    }
+
                     tv.setBackgroundColor(Color.WHITE);
-                    tv.setTextColor(Color.BLACK);
+                    tv.setTextColor(Color.parseColor("#737373"));
                     tv.setWidth( dpToPixel(100) );
                     tv.setTextSize( 15 );
                 }
@@ -113,7 +196,7 @@ public class Reservation extends AppCompatActivity {
 
         androidx.gridlayout.widget.GridLayout grid2 = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout02);
 
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < 25; i++) {
             for (int j = 0; j < 6; j++) {
                 TextView tv = new TextView(this);
                 tv.setHeight( dpToPixel(32) );
@@ -124,6 +207,8 @@ public class Reservation extends AppCompatActivity {
                 tv.setBackgroundColor(Color.parseColor("#8A00C2"));
                 tv.setOnClickListener(this::onClickTV_indoor);
                 tv.setClickable(true);
+                tv.setFocusable(true);
+
                 tv.getBackground().setAlpha(125);
                 tv.setText("1");
 
@@ -133,7 +218,7 @@ public class Reservation extends AppCompatActivity {
                 }
                 else if (i == 0) {
                     tv.setBackgroundColor(Color.WHITE);
-                    tv.setTextColor(Color.BLACK);
+                    tv.setTextColor(Color.parseColor("#737373"));
                     if (j == 1) {
                         tv.setText("M");
                     }
@@ -151,9 +236,80 @@ public class Reservation extends AppCompatActivity {
                     }
                 }
                 else if (j == 0) {
-                    tv.setText("8:00-8:30am");
+                    if (i == 1) {
+                        tv.setText("8:00-8:30am");
+                    }
+                    else if (i == 2) {
+                        tv.setText("8:30-9:00am");
+                    }
+                    else if (i == 3) {
+                        tv.setText("9:00-9:30am");
+                    }
+                    else if (i == 4) {
+                        tv.setText("9:30-10:00am");
+                    }
+                    else if (i == 5) {
+                        tv.setText("10:00-10:30am");
+                    }
+                    else if (i == 6) {
+                        tv.setText("10:30-11:00am");
+                    }
+                    else if (i == 7) {
+                        tv.setText("11:00-11:30am");
+                    }
+                    else if (i == 8) {
+                        tv.setText("11:30-12:00pm");
+                    }
+                    else if (i == 9) {
+                        tv.setText("12:00-12:30pm");
+                    }
+                    else if (i == 10) {
+                        tv.setText("12:30-1:00pm");
+                    }
+                    else if (i == 11) {
+                        tv.setText("1:00-1:30pm");
+                    }
+                    else if (i == 12) {
+                        tv.setText("1:30-2:00pm");
+                    }
+                    else if (i == 13) {
+                        tv.setText("2:00-2:30pm");
+                    }
+                    else if (i == 14) {
+                        tv.setText("2:30-3:00pm");
+                    }
+                    else if (i == 15) {
+                        tv.setText("3:00-3:30pm");
+                    }
+                    else if (i == 16) {
+                        tv.setText("3:30-4:00pm");
+                    }
+                    else if (i == 17) {
+                        tv.setText("4:00-4:30pm");
+                    }
+                    else if (i == 18) {
+                        tv.setText("4:30-5:00pm");
+                    }
+                    else if (i == 19) {
+                        tv.setText("5:00-5:30pm");
+                    }
+                    else if (i == 20) {
+                        tv.setText("5:30-6:00pm");
+                    }
+                    else if (i == 21) {
+                        tv.setText("6:00-6:30pm");
+                    }
+                    else if (i == 22) {
+                        tv.setText("6:30-7:00pm");
+                    }
+                    else if (i == 23) {
+                        tv.setText("7:00-7:30pm");
+                    }
+                    else if (i == 24) {
+                        tv.setText("7:30-8:00pm");
+                    }
                     tv.setBackgroundColor(Color.WHITE);
-                    tv.setTextColor(Color.BLACK);
+                    tv.setTextColor(Color.parseColor("#737373"));
                     tv.setWidth( dpToPixel(100) );
                     tv.setTextSize( 15 );
                 }
@@ -163,13 +319,14 @@ public class Reservation extends AppCompatActivity {
                     tv.getBackground().setAlpha(255);
                 }
 
-
                 androidx.gridlayout.widget.GridLayout.LayoutParams lp = new androidx.gridlayout.widget.GridLayout.LayoutParams();
                 lp.setMargins(dpToPixel(1), dpToPixel(1), dpToPixel(1), dpToPixel(1));
                 lp.rowSpec = androidx.gridlayout.widget.GridLayout.spec(i);
                 lp.columnSpec = GridLayout.spec(j);
 
                 grid2.addView(tv, lp);
+
+                cell_tvs_indoor.add(tv);
             }
         }
 
@@ -178,7 +335,7 @@ public class Reservation extends AppCompatActivity {
     public void onClickTV_indoor(View view) {
         TextView tv = (TextView) view;
 
-        int n = findIndexOfCellTextView(tv);
+        int n = findIndexofCellTextViewIndoor(tv);
         int row = n/COLUMN_COUNT;
         int col = n%COLUMN_COUNT;
 
@@ -187,6 +344,7 @@ public class Reservation extends AppCompatActivity {
         if (row == 0 || col == 0) {
             return;
         }
+
 
         String idx = String.valueOf(row) + "," + String.valueOf(col);
         if (!selected_cells_idx_indoor.contains(idx)) {
@@ -264,7 +422,7 @@ public class Reservation extends AppCompatActivity {
                 int i = Integer.valueOf(string_i);
                 int j = Integer.valueOf(string_j);
 
-                TextView tv_selected = findTextView(i, j);
+                TextView tv_selected = findTextViewIndoor(i, j);
                 String tv_str = tv_selected.getText().toString();
 
                 int num_seats = Integer.parseInt(tv_str);
@@ -279,7 +437,7 @@ public class Reservation extends AppCompatActivity {
         }
     }
 
-    public void onClickTV(View view) {
+    public void onClick(View view) {
         TextView tv = (TextView) view;
 
         int n = findIndexOfCellTextView(tv);
@@ -394,6 +552,18 @@ public class Reservation extends AppCompatActivity {
             }
         }
         return cell_tvs.get(0);
+    }
+
+    private TextView findTextViewIndoor(int row, int col) {
+        int idx = 0;
+        idx += (row) * COLUMN_COUNT;
+        idx += col;
+        for (int i = 0; i < cell_tvs_indoor.size(); i++) {
+            if (i == idx) {
+                return cell_tvs_indoor.get(i);
+            }
+        }
+        return cell_tvs_indoor.get(0);
     }
 
     public void toggle(View view) {

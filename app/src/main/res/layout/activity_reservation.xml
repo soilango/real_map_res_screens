@@ -95,7 +95,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,7 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                app:rowCount="13"
+                app:rowCount="25"
                 app:columnCount="6"
 
                 >
@@ -117,11 +118,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                app:rowCount="13"
+                app:rowCount="25"
                 app:columnCount="6"
 
                 android:visibility="gone"
-
                 >
             </androidx.gridlayout.widget.GridLayout>
 
@@ -129,5 +129,20 @@
 
     </androidx.core.widget.NestedScrollView>
 
+
+    <Button
+        android:id="@+id/buttonReserve"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:backgroundTint="#8A00C2"
+        android:fontFamily="@font/dmsans"
+        android:text="Make Reservation"
+        android:textSize="10dp"
+        android:layout_marginTop="-50dp"
+        android:textStyle="bold"
+        app:cornerRadius="10dp"
+        android:textColor="@color/white"
+        />
 
 </LinearLayout>
