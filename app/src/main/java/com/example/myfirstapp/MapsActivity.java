@@ -2,6 +2,7 @@ package com.example.myfirstapp;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -159,4 +160,31 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         b.setVisibility(View.VISIBLE);
         return false;
     }
+
+    public void clickButton(View view) {
+        Intent intent = new Intent(this, Reservation.class);
+        // add another intent
+
+        Button b = (Button) findViewById(R.id.buttonReserve);
+        String text = (String) b.getText();
+        if (text.equals("Make Reservation")) {
+            TextView tv1 = (TextView) findViewById(R.id.buildingName);
+            TextView tv2 = (TextView) findViewById(R.id.buildingDescription);
+
+            String building_name = (String) tv1.getText();
+            intent.putExtra("building_name", building_name);
+
+            String building_desc = (String) tv2.getText();
+            intent.putExtra("building_desc", building_desc);
+
+            startActivity(intent);
+
+        }
+        else {
+            // go to sign up / log-in screen
+        }
+
+    }
+
+
 }

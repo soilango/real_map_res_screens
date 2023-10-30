@@ -3,6 +3,7 @@ package com.example.myfirstapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import java.util.ArrayList;
 public class Reservation extends AppCompatActivity implements View.OnClickListener {
 
     boolean outdoorSelected = true;
+
+    String building_name = "";
+    String building_desc = "";
 
     private ArrayList<TextView> cell_tvs;
 
@@ -51,6 +55,18 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation);
+
+        Intent intent = getIntent();
+        building_name = intent.getStringExtra("building_name");
+        building_desc = intent.getStringExtra("building_desc");
+
+        TextView b_name = (TextView) findViewById(R.id.buildingTitle);
+        TextView b_desc = (TextView) findViewById(R.id.buildingDescription);
+        // do same for building image
+
+        b_name.setText(building_name);
+        b_desc.setText(building_desc);
+
         outdoorSelected = true;
 
         cell_tvs = new ArrayList<>();
@@ -433,7 +449,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                 tv_selected.getBackground().setAlpha(125);
 
             }
-            selected_cells_idx_indoor.clear();
+            selected_cells_idx_indoor = new ArrayList<>();
         }
     }
 
@@ -537,7 +553,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                 tv_selected.getBackground().setAlpha(125);
 
             }
-            selected_cells_idx.clear();
+            selected_cells_idx = new ArrayList<>();
         }
 
     }
@@ -577,6 +593,39 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
             grid.setVisibility(View.GONE);
             grid2.setVisibility(View.VISIBLE);
+
+            for (int l = 0; l < selected_cells_idx.size(); l++) {
+                String index = selected_cells_idx.get(l);
+                String string_i = "";
+                String string_j = "";
+
+                int k = 0;
+                while (index.charAt(k) != ',') {
+                    string_i += index.charAt(k);
+                    k++;
+                }
+                k++;
+                while (k < index.length()) {
+                    string_j += index.charAt(k);
+                    k++;
+                }
+
+                int i = Integer.valueOf(string_i);
+                int j = Integer.valueOf(string_j);
+
+                TextView tv_selected = findTextView(i, j);
+                String tv_str = tv_selected.getText().toString();
+
+                int num_seats = Integer.parseInt(tv_str);
+                num_seats++;
+                String seats = String.valueOf(num_seats);
+                tv_selected.setText(seats);
+                tv_selected.setBackgroundColor(Color.parseColor("#8A00C2"));
+                tv_selected.getBackground().setAlpha(125);
+
+            }
+            selected_cells_idx = new ArrayList<>();
+
         }
         else {
             outdoorSelected = true;
@@ -587,6 +636,38 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
             grid.setVisibility(View.VISIBLE);
             grid2.setVisibility(View.GONE);
+
+            for (int l = 0; l < selected_cells_idx_indoor.size(); l++) {
+                String index = selected_cells_idx_indoor.get(l);
+                String string_i = "";
+                String string_j = "";
+
+                int k = 0;
+                while (index.charAt(k) != ',') {
+                    string_i += index.charAt(k);
+                    k++;
+                }
+                k++;
+                while (k < index.length()) {
+                    string_j += index.charAt(k);
+                    k++;
+                }
+
+                int i = Integer.valueOf(string_i);
+                int j = Integer.valueOf(string_j);
+
+                TextView tv_selected = findTextViewIndoor(i, j);
+                String tv_str = tv_selected.getText().toString();
+
+                int num_seats = Integer.parseInt(tv_str);
+                num_seats++;
+                String seats = String.valueOf(num_seats);
+                tv_selected.setText(seats);
+                tv_selected.setBackgroundColor(Color.parseColor("#8A00C2"));
+                tv_selected.getBackground().setAlpha(125);
+
+            }
+            selected_cells_idx_indoor = new ArrayList<>();
         }
     }
 

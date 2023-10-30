@@ -38,8 +38,6 @@
         android:id="@+id/buildingTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_marginRight="5dp"
         android:fontFamily="@font/dmsans"
         android:gravity="center"
@@ -68,23 +66,30 @@
             />
     </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/buildingDescription"
+    <androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:fontFamily="@font/dmsans"
-        android:gravity="center"
-        android:text="Taper Hall is a common classroom and work space for students. It is a quiet building with 3 floors and located near the main USC campus entrance."
-        android:textSize="15dp"
-        android:textColor="#737373" />
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/buildingDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:fontFamily="@font/dmsans"
+            android:gravity="center"
+            android:text="Taper Hall is a common classroom and work space for students. It is a quiet building with 3 floors and located near the main USC campus entrance."
+            android:textSize="15dp"
+            android:textColor="#737373" />
+    </androidx.core.widget.NestedScrollView>
+
 
     <ImageView
         android:id="@+id/toggle"
-        android:layout_width="98dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:clickable="true"
@@ -95,7 +100,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="225dp"
         android:layout_marginBottom="60dp">
 
         <LinearLayout
@@ -138,10 +143,11 @@
         android:backgroundTint="#8A00C2"
         android:fontFamily="@font/dmsans"
         android:text="Make Reservation"
-        android:textSize="10dp"
-        android:layout_marginTop="-50dp"
+        android:textSize="15dp"
+        android:layout_marginTop="-30dp"
         android:textStyle="bold"
         app:cornerRadius="10dp"
+        android:paddingTop="4dp"
         android:textColor="@color/white"
         />
 
