@@ -466,6 +466,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             return;
         }
 
+
         String idx = String.valueOf(row) + "," + String.valueOf(col);
         if (!selected_cells_idx.contains(idx)) {
             if (str.equals("0")) {
@@ -669,6 +670,15 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             }
             selected_cells_idx_indoor = new ArrayList<>();
         }
+    }
+
+    public void makeReservation(View view) {
+        TextView error = (TextView) findViewById(R.id.errorMsg);
+        if (selected_cells_idx.size() == 0 && selected_cells_idx_indoor.size() == 0) {
+            error.setText("Please select at least one time slot.");
+            error.setVisibility(View.VISIBLE);
+        }
+        // else if user already has a reservation, set error message accordingly
     }
 
 }

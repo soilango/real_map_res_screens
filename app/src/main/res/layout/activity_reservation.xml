@@ -97,43 +97,53 @@
         android:onClick="toggle"/>
 
     <androidx.core.widget.NestedScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="225dp"
-        android:layout_marginBottom="60dp">
+        android:layout_height="270dp"
+        android:layout_marginBottom="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <androidx.gridlayout.widget.GridLayout
                 android:id="@+id/gridLayout01"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                app:rowCount="25"
                 app:columnCount="6"
+                app:rowCount="25"
 
-                >
-            </androidx.gridlayout.widget.GridLayout>
+                ></androidx.gridlayout.widget.GridLayout>
+
             <androidx.gridlayout.widget.GridLayout
                 android:id="@+id/gridLayout02"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                app:rowCount="25"
+                android:visibility="gone"
                 app:columnCount="6"
 
-                android:visibility="gone"
-                >
-            </androidx.gridlayout.widget.GridLayout>
+                app:rowCount="25"></androidx.gridlayout.widget.GridLayout>
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
+    <TextView
+        android:id="@+id/errorMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/dmsans"
+        android:gravity="center"
+        android:text="An error occurred."
+        android:textColor="@color/design_default_color_error"
+        android:textSize="15dp"
+        android:visibility="gone"
+        />
 
     <Button
         android:id="@+id/buttonReserve"
@@ -144,11 +154,12 @@
         android:fontFamily="@font/dmsans"
         android:text="Make Reservation"
         android:textSize="15dp"
-        android:layout_marginTop="-30dp"
+        android:layout_marginTop="-10dp"
         android:textStyle="bold"
         app:cornerRadius="10dp"
         android:paddingTop="4dp"
         android:textColor="@color/white"
+        android:onClick="makeReservation"
         />
 
 </LinearLayout>
