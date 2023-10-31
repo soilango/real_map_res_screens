@@ -163,7 +163,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
     public void clickButton(View view) {
         Intent intent = new Intent(this, Reservation.class);
-        // add another intent
+        // add another intent for creating account/logging in
 
         Button b = (Button) findViewById(R.id.buttonReserve);
         String text = (String) b.getText();

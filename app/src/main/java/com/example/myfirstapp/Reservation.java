@@ -30,6 +30,10 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
     private static final int COLUMN_COUNT = 6;
 
+    private boolean newRes = true;
+
+    // IF FALSE: change the header to 'edit reservation' and load past reservation
+
     private int findIndexOfCellTextView(TextView tv) {
         for (int n=0; n<cell_tvs.size(); n++) {
             if (cell_tvs.get(n) == tv)
@@ -679,6 +683,19 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             error.setVisibility(View.VISIBLE);
         }
         // else if user already has a reservation, set error message accordingly
+    }
+
+    public void backArrow(View view) {
+        Intent intent = new Intent(this, MapsActivity.class);
+        // add another intent to go to profile screen
+
+        if (newRes == true) {
+            // go to map
+            startActivity(intent);
+        }
+        else {
+            // go to profile screen
+        }
     }
 
 }
