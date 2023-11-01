@@ -4,6 +4,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -19,7 +21,13 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.myfirstapp.databinding.ActivityMapsBinding;
+import com.google.gson.Gson;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +41,9 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
     private Map<String, String> building_to_desc;
 
-    private boolean loggedIn = true;
+    private String uscid = "";
+
+    private Building[] buildings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +57,27 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        if (!loggedIn) {
-            Button resButton = (Button) findViewById(R.id.buttonReserve);
-            String text = "Create Account";
-            resButton.setText(text);
+        buildings = new Building[]{};
+
+        try {
+            getBuildings();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
+//        Intent intent = getIntent();
+//        if (intent.getStringExtra("uscid") == null) {
+//            Button resButton = (Button) findViewById(R.id.buttonReserve);
+//            String text = "Create Account";
+//            resButton.setText(text);
+//        }
+//        else {
+//            uscid = intent.getStringExtra("uscid");
+//        }
+
     }
+
+
 
     /**
      * Manipulates the map once available.
@@ -99,35 +124,51 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
         mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
 
-        LatLng taper = new LatLng(34.022412027200986, -118.28451527064657);
-        Marker taperHall = googleMap.addMarker(new MarkerOptions()
-                .position(taper)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.unselected_marker)));
-        String name = "Taper Hall";
-        taperHall.setTag(name);
-        markerList.add(taperHall);
-        String desc = "Taper Hall is a common classroom and workspace for students. It is a quiet building with 3 floors and located near the main USC campus entrance.";
-        building_to_desc.put(name, desc);
+        for (int i = 0; i < buildings.length; i++) {
+            Building b = buildings[i];
+            String b_name = b.buildingName;
+            String b_desc = b.description;
+            double latitude = b.latitude;
+            double longitude = b.longitude;
 
-        LatLng jff = new LatLng(34.01871043598973, -118.28239854170198);
-        Marker fertitta = googleMap.addMarker(new MarkerOptions()
-                .position(jff)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.unselected_marker)));
-        name = "Jill & Frank Fertitta Hall";
-        fertitta.setTag(name);
-        markerList.add(fertitta);
-        desc = "Fertitta Hall features 21 classrooms, two lecture halls, 50 breakout rooms, an outdoor courtyard, and advanced technology. The building is located at Figueroa Street and Exposition Drive, close to the main entrance of USC.";
-        building_to_desc.put(name, desc);
+            LatLng coords = new LatLng(latitude, longitude);
+            Marker marker = googleMap.addMarker(new MarkerOptions()
+                    .position(coords)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.unselected_marker)));
 
-        LatLng rth = new LatLng(34.0200292866705, -118.28981517564547);
-        Marker tutor_hall = googleMap.addMarker(new MarkerOptions()
-                .position(rth)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.unselected_marker)));
-        name = "Ronald Tutor Hall";
-        tutor_hall.setTag(name);
-        markerList.add(tutor_hall);
-        desc = "Ronald Tutor Hall is a five-story, 103,000 GSF engineering facility that accommodates undergraduate and graduate studies in information technology, bioengineering, and nanotechnology. The flexible space features labs and research areas extending from a central-core plan as well as the Viterbi Museum.";
-        building_to_desc.put(name, desc);
+            marker.setTag(b_name);
+            markerList.add(marker);
+            building_to_desc.put(b_name, b_desc);
+        }
+//        LatLng taper = new LatLng(34.022412027200986, -118.28451527064657);
+//        Marker taperHall = googleMap.addMarker(new MarkerOptions()
+//                .position(taper)
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.unselected_marker)));
+//        String name = "Taper Hall";
+//        taperHall.setTag(name);
+//        markerList.add(taperHall);
+//        String desc = "Taper Hall is a common classroom and workspace for students. It is a quiet building with 3 floors and located near the main USC campus entrance.";
+//        building_to_desc.put(name, desc);
+//
+//        LatLng jff = new LatLng(34.01871043598973, -118.28239854170198);
+//        Marker fertitta = googleMap.addMarker(new MarkerOptions()
+//                .position(jff)
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.unselected_marker)));
+//        name = "Jill & Frank Fertitta Hall";
+//        fertitta.setTag(name);
+//        markerList.add(fertitta);
+//        desc = "Fertitta Hall features 21 classrooms, two lecture halls, 50 breakout rooms, an outdoor courtyard, and advanced technology. The building is located at Figueroa Street and Exposition Drive, close to the main entrance of USC.";
+//        building_to_desc.put(name, desc);
+//
+//        LatLng rth = new LatLng(34.0200292866705, -118.28981517564547);
+//        Marker tutor_hall = googleMap.addMarker(new MarkerOptions()
+//                .position(rth)
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.unselected_marker)));
+//        name = "Ronald Tutor Hall";
+//        tutor_hall.setTag(name);
+//        markerList.add(tutor_hall);
+//        desc = "Ronald Tutor Hall is a five-story, 103,000 GSF engineering facility that accommodates undergraduate and graduate studies in information technology, bioengineering, and nanotechnology. The flexible space features labs and research areas extending from a central-core plan as well as the Viterbi Museum.";
+//        building_to_desc.put(name, desc);
 
 //        googleMap.moveCamera(CameraUpdateFactory.newLatLng(taper));
 //        googleMap.moveCamera(CameraUpdateFactory.newLatLng(jff));
@@ -169,13 +210,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         String text = (String) b.getText();
         if (text.equals("Make Reservation")) {
             TextView tv1 = (TextView) findViewById(R.id.buildingName);
-            TextView tv2 = (TextView) findViewById(R.id.buildingDescription);
+//            TextView tv2 = (TextView) findViewById(R.id.buildingDescription);
 
             String building_name = (String) tv1.getText();
             intent.putExtra("building_name", building_name);
 
-            String building_desc = (String) tv2.getText();
-            intent.putExtra("building_desc", building_desc);
+//            String building_desc = (String) tv2.getText();
+//            intent.putExtra("building_desc", building_desc);
 
             startActivity(intent);
 
@@ -186,5 +227,35 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
     }
 
+    public void getBuildings() throws IOException {
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy gfgPolicy =
+                    new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(gfgPolicy);
+        }
+        System.out.println("here");
+        URL url = new URL("http://172.20.10.2:8080/getAllBuildings");
+        HttpURLConnection con = (HttpURLConnection)url.openConnection();
+        con.setRequestMethod("GET");
+        int status = con.getResponseCode();
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer content = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        in.close();
+
+        System.out.println(status);
+
+        Gson gson = new Gson();
+
+        buildings = new Gson().fromJson(content.toString(), Building[].class);
+
+
+        con.disconnect();
+
+
+    }
 
 }

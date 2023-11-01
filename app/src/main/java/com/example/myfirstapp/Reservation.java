@@ -7,18 +7,36 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Reservation extends AppCompatActivity implements View.OnClickListener {
 
     boolean outdoorSelected = true;
 
     String building_name = "";
-    String building_desc = "";
+
+//    HashMap<String, Integer> buildings_avail = new HashMap<>();
+
+//    String building_desc = "";
+
+    Building building = new Building(null, null, null, null, 0, 0, null, null, null);
+//    List<Integer> building_img = new ArrayList<>();
 
     private ArrayList<TextView> cell_tvs;
 
@@ -62,14 +80,28 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
         Intent intent = getIntent();
         building_name = intent.getStringExtra("building_name");
-        building_desc = intent.getStringExtra("building_desc");
+//        building_desc = intent.getStringExtra("building_desc");
+
+        try {
+            getBuilding();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         TextView b_name = (TextView) findViewById(R.id.buildingTitle);
         TextView b_desc = (TextView) findViewById(R.id.buildingDescription);
         // do same for building image
 
         b_name.setText(building_name);
-        b_desc.setText(building_desc);
+
+        b_desc.setText(building.description);
+
+        // GET REST OF BUILDING INFO
+
+
+
+
+
 
         outdoorSelected = true;
 
@@ -364,7 +396,6 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         if (row == 0 || col == 0) {
             return;
         }
-
 
         String idx = String.valueOf(row) + "," + String.valueOf(col);
         if (!selected_cells_idx_indoor.contains(idx)) {
@@ -696,6 +727,39 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         else {
             // go to profile screen
         }
+    }
+
+    public void getBuilding() throws IOException {
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy gfgPolicy =
+                    new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(gfgPolicy);
+        }
+        System.out.println("here");
+        String url_string = "http://172.20.10.2:8080/getBuilding?documentId=" + building_name;
+        URL url = new URL(url_string);
+        HttpURLConnection con = (HttpURLConnection)url.openConnection();
+        con.setRequestMethod("GET");
+        int status = con.getResponseCode();
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer content = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        in.close();
+
+        System.out.println(status);
+
+        Gson gson = new Gson();
+
+        building = new Gson().fromJson(content.toString(), Building.class);
+        System.out.println(building.description);
+
+
+        con.disconnect();
+
+
     }
 
 }

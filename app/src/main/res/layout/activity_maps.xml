@@ -75,16 +75,23 @@
             android:id="@+id/buildingName"
             android:layout_marginBottom="1dp"
             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/dmsans"
-            android:text="Taper Hall is a common classroom and workspace for students. It is a quiet building with 3 floors and located near the main USC campus entrance."
-            android:textColor="#737373"
-            android:textSize="15dp"
-            android:id="@+id/buildingDescription"
-            android:layout_marginBottom="3dp"
-            />
+        <androidx.core.widget.NestedScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="250dp"
+            android:layout_height="100dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dmsans"
+                android:text="Taper Hall is a common classroom and workspace for students. It is a quiet building with 3 floors and located near the main USC campus entrance."
+                android:textColor="#737373"
+                android:textSize="15dp"
+                android:id="@+id/buildingDescription"
+                android:layout_marginBottom="3dp"
+                />
+        </androidx.core.widget.NestedScrollView>
+
 
         <Button
             android:id="@+id/buttonReserve"
