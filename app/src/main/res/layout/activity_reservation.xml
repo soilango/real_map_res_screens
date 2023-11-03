@@ -90,11 +90,21 @@
 
     <ImageView
         android:id="@+id/toggle"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
+        android:layout_width="170dp"
+        android:layout_height="45dp"
         android:layout_gravity="center"
         android:clickable="true"
-        app:srcCompat="@drawable/outdoor_selected"
+        android:layout_marginBottom="-10dp"
+
+        app:srcCompat="@drawable/outdoor_long"
+        android:onClick="toggle"/>
+    <ImageView
+        android:id="@+id/week_toggle"
+        android:layout_width="170dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:clickable="true"
+        app:srcCompat="@drawable/this_week"
         android:onClick="toggle"/>
 
     <androidx.core.widget.NestedScrollView

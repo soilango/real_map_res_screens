@@ -22,6 +22,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -618,11 +620,13 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         return cell_tvs_indoor.get(0);
     }
 
+    // ADD FUNCTION TO TOGGLE BETWEEN WEEKS -> make the associated backend calls & clear lists
+
     public void toggle(View view) {
         ImageView iv = (ImageView) view;
         if (outdoorSelected) {
             outdoorSelected = false;
-            iv.setImageResource(R.drawable.indoor_selected);
+            iv.setImageResource(R.drawable.indoor_long);
 
             androidx.gridlayout.widget.GridLayout grid = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout01);
             androidx.gridlayout.widget.GridLayout grid2 = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout02);
@@ -665,7 +669,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         }
         else {
             outdoorSelected = true;
-            iv.setImageResource(R.drawable.outdoor_selected);
+            iv.setImageResource(R.drawable.outdoor_long);
 
             androidx.gridlayout.widget.GridLayout grid = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout01);
             androidx.gridlayout.widget.GridLayout grid2 = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout02);
@@ -758,6 +762,51 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
 
         con.disconnect();
+
+
+    }
+
+    public void getBuildingAvailability() throws IOException {
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy gfgPolicy =
+                    new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(gfgPolicy);
+        }
+        System.out.println("here");
+        //getBuildingAvailability?buildingName=Leavey Library&isIndoor=true&weekDateStr=2023-10-30
+        boolean isIndoor = true;
+        if (outdoorSelected) {
+            isIndoor = false;
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        Date monday = cal.getTime();
+        System.out.println(monday);
+
+
+//        String url_string = "http://172.20.10.2:8080/getBuilding?documentId=" + building_name;
+//        URL url = new URL(url_string);
+//        HttpURLConnection con = (HttpURLConnection)url.openConnection();
+//        con.setRequestMethod("GET");
+//        int status = con.getResponseCode();
+//        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//        String inputLine;
+//        StringBuffer content = new StringBuffer();
+//        while ((inputLine = in.readLine()) != null) {
+//            content.append(inputLine);
+//        }
+//        in.close();
+//
+//        System.out.println(status);
+//
+//        Gson gson = new Gson();
+//
+//        building = new Gson().fromJson(content.toString(), Building.class);
+//        System.out.println(building.description);
+//
+//
+//        con.disconnect();
 
 
     }
