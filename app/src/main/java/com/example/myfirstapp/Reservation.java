@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,6 +35,8 @@ import java.util.TimeZone;
 public class Reservation extends AppCompatActivity implements View.OnClickListener {
 
     boolean outdoorSelected = true;
+
+    boolean thisWeek = true;
 
     String building_name = "";
 
@@ -66,6 +69,8 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
     private static final int COLUMN_COUNT = 6;
 
     private boolean newRes = true;
+
+    private String uscId = "1111111111";
 
     // IF FALSE: change the header to 'edit reservation' and load past reservation
 
@@ -126,6 +131,12 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         selected_cells_idx_indoor = new ArrayList<>();
         cell_tvs_indoor = new ArrayList<>();
 
+        populateGrids();
+
+
+    }
+
+    public void populateGrids() {
         androidx.gridlayout.widget.GridLayout grid = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout01);
 
         for (int i = 0; i < 25; i++) {
@@ -494,6 +505,13 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
         }
 
+        grid.setVisibility(View.VISIBLE);
+        grid2.setVisibility(View.GONE);
+
+        outdoorSelected = true;
+        ImageView iv = (ImageView) findViewById(R.id.toggle);
+        iv.setImageResource(R.drawable.outdoor_long);
+
         tooEarly = true;
         tooLate = false;
         for (int i = 1; i < 25; i++) {
@@ -530,7 +548,6 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                 tv.setText(String.valueOf(seats));
             }
         }
-
     }
 
     public void onClickTV_indoor(View view) {
@@ -832,6 +849,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             grid.setVisibility(View.VISIBLE);
             grid2.setVisibility(View.GONE);
 
+
             for (int l = 0; l < selected_cells_idx_indoor.size(); l++) {
                 String index = selected_cells_idx_indoor.get(l);
                 String string_i = "";
@@ -866,13 +884,305 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    public void makeReservation(View view) {
+    public void makeReservation(View view) throws IOException {
         TextView error = (TextView) findViewById(R.id.errorMsg);
         if (selected_cells_idx.size() == 0 && selected_cells_idx_indoor.size() == 0) {
             error.setText("Please select at least one time slot.");
             error.setVisibility(View.VISIBLE);
         }
         // else if user already has a reservation, set error message accordingly
+        else {
+            ArrayList<String> timeBlocks = new ArrayList<>();
+
+            boolean indoor = true;
+
+            String res_day = "";
+
+            if (selected_cells_idx.size() != 0) {
+                indoor = false;
+
+                for (int l = 0; l < selected_cells_idx.size(); l++) {
+                    String index = selected_cells_idx.get(l);
+                    String string_i = "";
+                    String string_j = "";
+
+                    int k = 0;
+                    while (index.charAt(k) != ',') {
+                        string_i += index.charAt(k);
+                        k++;
+                    }
+                    k++;
+                    while (k < index.length()) {
+                        string_j += index.charAt(k);
+                        k++;
+                    }
+
+                    int i = Integer.valueOf(string_i);
+                    int j = Integer.valueOf(string_j);
+
+                    String time = times_outdoor.get(i);
+                    String day = days_outdoor.get(j);
+                    String key = day + " " + time;
+                    res_day = day;
+
+                    timeBlocks.add(key);
+                }
+
+            }
+
+            else {
+
+                for (int l = 0; l < selected_cells_idx_indoor.size(); l++) {
+                    String index = selected_cells_idx_indoor.get(l);
+                    String string_i = "";
+                    String string_j = "";
+
+                    int k = 0;
+                    while (index.charAt(k) != ',') {
+                        string_i += index.charAt(k);
+                        k++;
+                    }
+                    k++;
+                    while (k < index.length()) {
+                        string_j += index.charAt(k);
+                        k++;
+                    }
+
+                    int i = Integer.valueOf(string_i);
+                    int j = Integer.valueOf(string_j);
+
+                    String time = times_indoor.get(i);
+                    String day = days_indoor.get(j);
+                    String key = day + " " + time;
+                    res_day = day;
+                    timeBlocks.add(key);
+                }
+
+                int SDK_INT = android.os.Build.VERSION.SDK_INT;
+                if (SDK_INT > 9)
+                {
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                            .permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    //your codes here
+
+                }
+
+            }
+            URL url = new URL("http://172.20.10.2:8080/makeReservation");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("Content-Type", "application/json");
+
+            String result = "[";
+            for (int i = 0; i < timeBlocks.size(); i++) {
+                result += "\"" + timeBlocks.get(i) + "\"";
+                if (i != (timeBlocks.size() - 1)) {
+                    result += ",";
+                }
+            }
+            result += "]";
+
+            Calendar cal = Calendar.getInstance();
+
+            if (res_day.equals("M")) {
+                cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            }
+            if (res_day.equals("T")) {
+                cal.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+            }
+            if (res_day.equals("W")) {
+                cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+            }
+            if (res_day.equals("Th")) {
+                cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+            }
+            if (res_day.equals("F")) {
+                cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+            }
+
+            Date date = cal.getTime();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+            String json_date = sdf.format(date);
+
+
+            String jsonInputString = "{\"idNumber\": \"" + uscId +"\", \"buildingName\": \"" + building_name + "\", \"timeBlocks\":" + result + ", \"indoor\": \"" + indoor +"\", \"isCanceled\": \"" + false + "\", \"date\": \"" + json_date + "\"}";
+            try(OutputStream os = con.getOutputStream()) {
+                System.out.println("HEREEEEEEEE");
+                byte[] input = jsonInputString.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+            try(BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine = null;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                System.out.println(response.toString());
+            }
+            catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+    }
+
+    public void toggle_week(View view) throws IOException {
+        if (thisWeek) {
+            cell_tvs = new ArrayList<>();
+            cell_tvs_indoor = new ArrayList<>();
+            ImageView iv = (ImageView) findViewById(R.id.week_toggle);
+            iv.setImageResource(R.drawable.next_week);
+            thisWeek = false;
+
+            if (android.os.Build.VERSION.SDK_INT > 9) {
+                StrictMode.ThreadPolicy gfgPolicy =
+                        new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(gfgPolicy);
+            }
+
+            selected_cells_idx = new ArrayList<>();
+            selected_cells_idx_indoor = new ArrayList<>();
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            cal.add(Calendar.DATE, 7);
+            Date monday = cal.getTime();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+            String res_week = sdf.format(monday);
+
+            System.out.println(res_week);
+
+            boolean isIndoor = true;
+            String url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+            URL url = new URL(url_string);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            int status = con.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+
+            System.out.println("STATUS CODE FOR NEW THINGY");
+            System.out.println(status);
+
+
+            Gson gson = new Gson();
+//
+            avails_indoor = new Gson().fromJson(content.toString(), HashMap.class);
+
+            System.out.println(avails_indoor);
+
+            isIndoor = false;
+            url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+            url = new URL(url_string);
+            con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+//        status = con.getResponseCode();
+            in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String ipline;
+            content = new StringBuffer();
+            while ((ipline = in.readLine()) != null) {
+                content.append(ipline);
+            }
+            in.close();
+
+            avails_outdoor = new Gson().fromJson(content.toString(), HashMap.class);
+
+            System.out.println(avails_outdoor);
+
+            con.disconnect();
+
+            populateGrids();
+
+        }
+        else {
+            ImageView iv = (ImageView) findViewById(R.id.week_toggle);
+            iv.setImageResource(R.drawable.this_week);
+
+            thisWeek = true;
+
+            cell_tvs = new ArrayList<>();
+            cell_tvs_indoor = new ArrayList<>();
+
+            if (android.os.Build.VERSION.SDK_INT > 9) {
+                StrictMode.ThreadPolicy gfgPolicy =
+                        new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(gfgPolicy);
+            }
+
+            selected_cells_idx = new ArrayList<>();
+            selected_cells_idx_indoor = new ArrayList<>();
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+//            cal.add(Calendar.DATE, 7);
+            Date monday = cal.getTime();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+            String res_week = sdf.format(monday);
+
+            System.out.println(res_week);
+
+            boolean isIndoor = true;
+            String url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+            URL url = new URL(url_string);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            int status = con.getResponseCode();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+
+            System.out.println("STATUS CODE FOR NEW THINGY");
+            System.out.println(status);
+
+
+            Gson gson = new Gson();
+//
+            avails_indoor = new Gson().fromJson(content.toString(), HashMap.class);
+
+            System.out.println(avails_indoor);
+
+            isIndoor = false;
+            url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+            url = new URL(url_string);
+            con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+//        status = con.getResponseCode();
+            in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String ipline;
+            content = new StringBuffer();
+            while ((ipline = in.readLine()) != null) {
+                content.append(ipline);
+            }
+            in.close();
+
+            avails_outdoor = new Gson().fromJson(content.toString(), HashMap.class);
+
+            System.out.println(avails_outdoor);
+
+            con.disconnect();
+            populateGrids();
+
+        }
     }
 
     public void backArrow(View view) {
@@ -895,7 +1205,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             StrictMode.setThreadPolicy(gfgPolicy);
         }
         System.out.println("here");
-        String url_string = "http://172.20.10.6:8080/getBuilding?documentId=" + building_name;
+        String url_string = "http://172.20.10.2:8080/getBuilding?documentId=" + building_name;
         URL url = new URL(url_string);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
@@ -947,7 +1257,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         System.out.println(res_week);
 
         boolean isIndoor = true;
-        String url_string = "http://172.20.10.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+        String url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
         URL url = new URL(url_string);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
@@ -970,7 +1280,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         System.out.println(avails_indoor);
 
         isIndoor = false;
-        url_string = "http://172.20.10.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+        url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
         url = new URL(url_string);
         con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
