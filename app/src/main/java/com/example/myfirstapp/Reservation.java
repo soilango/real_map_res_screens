@@ -47,6 +47,8 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
     String building_name = "";
 
+    boolean resWeekThis = true;
+
     HashMap<String, Object> avails_outdoor = new HashMap<>();
     HashMap<String, Object> avails_indoor = new HashMap<>();
 
@@ -75,7 +77,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
     private static final int COLUMN_COUNT = 6;
 
-    private boolean newRes = true;
+    private boolean newRes = false;
 
     private String uscId = "1111111111";
 
@@ -147,12 +149,16 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         populateGrids();
 
         if (!newRes) {
-            try {
-                loadRes();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            populateRes();
         }
+
+//        if (!newRes) {
+//            try {
+//                loadRes();
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
 
 
     }
@@ -218,10 +224,56 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                 }
             }
 
+            androidx.gridlayout.widget.GridLayout grid2 = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout02);
+            androidx.gridlayout.widget.GridLayout grid = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout01);
+
+            grid.setVisibility(View.GONE);
+            grid2.setVisibility(View.VISIBLE);
+
+            ImageView iv1 = (ImageView) findViewById(R.id.toggle);
+            iv1.setImageResource(R.drawable.indoor_long);
+
+            for (int i = 0; i < rows.size(); i++) {
+                int row = rows.get(i);
+                TextView tv = findTextViewIndoor(row, j);
+                tv.setBackgroundColor(Color.RED);
+                String idx = String.valueOf(row) + "," + String.valueOf(j);
+                selected_cells_idx_indoor.add(idx);
+            }
 
         }
         else {
 
+            for (int i = 0; i < times.size(); i++) {
+                for (Map.Entry<Integer, String> entry : times_outdoor.entrySet()) {
+                    if (entry.getValue().equals(times.get(i))) {
+                        rows.add(entry.getKey());
+                    }
+                }
+            }
+
+            androidx.gridlayout.widget.GridLayout grid2 = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout02);
+            androidx.gridlayout.widget.GridLayout grid = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout01);
+
+            grid.setVisibility(View.VISIBLE);
+            grid2.setVisibility(View.GONE);
+
+            ImageView iv1 = (ImageView) findViewById(R.id.toggle);
+            iv1.setImageResource(R.drawable.outdoor_long);
+
+            for (int i = 0; i < rows.size(); i++) {
+                int row = rows.get(i);
+                TextView tv = findTextView(row, j);
+                tv.setBackgroundColor(Color.RED);
+                String idx = String.valueOf(row) + "," + String.valueOf(j);
+                selected_cells_idx.add(idx);
+            }
+
+        }
+
+        if (resWeekThis == false) {
+            ImageView iv = (ImageView) findViewById(R.id.week_toggle);
+            iv.setImageResource(R.drawable.next_week);
         }
 
     }
@@ -579,17 +631,17 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
         outdoorSelected = true;
 
-        if (!newRes) {
-            if (thisWeek = false) {
-                ImageView imgView = (ImageView) findViewById(R.id.week_toggle);
-                imgView.setImageResource(R.drawable.next_week);
-            }
-            if (prevRes.get("indoor").equals("true")) {
-                outdoorSelected = false;
-                grid.setVisibility(View.GONE);
-                grid2.setVisibility(View.VISIBLE);
-            }
-        }
+//        if (!newRes) {
+//            if (thisWeek = false) {
+//                ImageView imgView = (ImageView) findViewById(R.id.week_toggle);
+//                imgView.setImageResource(R.drawable.next_week);
+//            }
+//            if (prevRes.get("indoor").equals("true")) {
+//                outdoorSelected = false;
+//                grid.setVisibility(View.GONE);
+//                grid2.setVisibility(View.VISIBLE);
+//            }
+//        }
 
 
 
@@ -1387,8 +1439,9 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             Date nextMon = cal.getTime();
             if (date.compareTo(nextMon) >= 0) {
                 res_week = sdf.format(nextMon);
+                resWeekThis = false;
             }
-            thisWeek = false;
+
         }
 
 
