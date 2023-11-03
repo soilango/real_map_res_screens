@@ -44,6 +44,12 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
     HashMap<Integer, String> days_outdoor = new HashMap<>();
 
+    HashMap<Integer, String> times_indoor = new HashMap<>();
+
+    HashMap<Integer, String> days_indoor = new HashMap<>();
+
+
+
 //    String building_desc = "";
 
     Building building = new Building(null, null, null, null, 0, 0, null, null, null);
@@ -112,7 +118,6 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
-
 
         outdoorSelected = true;
 
@@ -302,8 +307,9 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                 TextView tv = findTextView(i, j);
 
                 if (tooEarly || tooLate) {
-                    tv.setBackgroundColor(Color.DKGRAY);
+                    tv.setBackgroundColor(Color.LTGRAY);
                     tv.getBackground().setAlpha(255);
+                    tv.setText("");
                     continue;
                 }
 
@@ -349,103 +355,132 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                     tv.setTextColor(Color.parseColor("#737373"));
                     if (j == 1) {
                         tv.setText("M");
+                        days_indoor.put(1, "M");
                     }
                     if (j == 2) {
                         tv.setText("T");
+                        days_indoor.put(2, "T");
                     }
                     if (j == 3) {
                         tv.setText("W");
+                        days_indoor.put(3, "W");
                     }
                     if (j == 4) {
                         tv.setText("Th");
+                        days_indoor.put(4, "Th");
                     }
                     if (j == 5) {
                         tv.setText("F");
+                        days_indoor.put(5, "F");
                     }
                 }
                 else if (j == 0) {
                     if (i == 1) {
-                        tv.setText("8:00-8:30am");
+                        tv.setText("08:00-08:30");
+                        times_indoor.put(1, "08:00:00");
                     }
                     else if (i == 2) {
-                        tv.setText("8:30-9:00am");
+                        tv.setText("08:30-09:00");
+                        times_indoor.put(2, "08:30:00");
                     }
                     else if (i == 3) {
-                        tv.setText("9:00-9:30am");
+                        tv.setText("09:00-09:30");
+                        times_indoor.put(3, "09:00:00");
                     }
                     else if (i == 4) {
-                        tv.setText("9:30-10:00am");
+                        tv.setText("09:30-10:00");
+                        times_indoor.put(4, "09:30:00");
                     }
                     else if (i == 5) {
-                        tv.setText("10:00-10:30am");
+                        tv.setText("10:00-10:30");
+                        times_indoor.put(5, "10:00:00");
                     }
                     else if (i == 6) {
-                        tv.setText("10:30-11:00am");
+                        tv.setText("10:30-11:00");
+                        times_indoor.put(6, "10:30:00");
                     }
                     else if (i == 7) {
-                        tv.setText("11:00-11:30am");
+                        tv.setText("11:00-11:30");
+                        times_indoor.put(7, "11:00:00");
                     }
                     else if (i == 8) {
-                        tv.setText("11:30-12:00pm");
+                        tv.setText("11:30-12:00");
+                        times_indoor.put(8, "11:30:00");
                     }
                     else if (i == 9) {
-                        tv.setText("12:00-12:30pm");
+                        tv.setText("12:00-12:30");
+                        times_indoor.put(9, "12:00:00");
                     }
                     else if (i == 10) {
-                        tv.setText("12:30-1:00pm");
+                        tv.setText("12:30-13:00");
+                        times_indoor.put(10, "12:30:00");
                     }
                     else if (i == 11) {
-                        tv.setText("1:00-1:30pm");
+                        tv.setText("13:00-13:30");
+                        times_indoor.put(11, "13:00:00");
                     }
                     else if (i == 12) {
-                        tv.setText("1:30-2:00pm");
+                        tv.setText("13:30-14:00");
+                        times_indoor.put(12, "13:30:00");
                     }
                     else if (i == 13) {
-                        tv.setText("2:00-2:30pm");
+                        tv.setText("14:00-14:30");
+                        times_indoor.put(13, "14:00:00");
                     }
                     else if (i == 14) {
-                        tv.setText("2:30-3:00pm");
+                        tv.setText("14:30-15:00");
+                        times_indoor.put(14, "14:30:00");
                     }
                     else if (i == 15) {
-                        tv.setText("3:00-3:30pm");
+                        tv.setText("15:00-15:30");
+                        times_indoor.put(15, "15:00:00");
                     }
                     else if (i == 16) {
-                        tv.setText("3:30-4:00pm");
+                        tv.setText("15:30-16:00");
+                        times_indoor.put(16, "15:30:00");
                     }
                     else if (i == 17) {
-                        tv.setText("4:00-4:30pm");
+                        tv.setText("16:00-16:30");
+                        times_indoor.put(17, "16:00:00");
                     }
                     else if (i == 18) {
-                        tv.setText("4:30-5:00pm");
+                        tv.setText("16:30-17:00");
+                        times_indoor.put(18, "16:30:00");
                     }
                     else if (i == 19) {
-                        tv.setText("5:00-5:30pm");
+                        tv.setText("17:00-17:30");
+                        times_indoor.put(19, "17:00:00");
                     }
                     else if (i == 20) {
-                        tv.setText("5:30-6:00pm");
+                        tv.setText("17:30-18:00");
+                        times_indoor.put(20, "17:30:00");
                     }
                     else if (i == 21) {
-                        tv.setText("6:00-6:30pm");
+                        tv.setText("18:00-18:30");
+                        times_indoor.put(21, "18:00:00");
                     }
                     else if (i == 22) {
-                        tv.setText("6:30-7:00pm");
+                        tv.setText("18:30-19:00");
+                        times_indoor.put(22, "18:30:00");
                     }
                     else if (i == 23) {
-                        tv.setText("7:00-7:30pm");
+                        tv.setText("19:00-19:30");
+                        times_indoor.put(23, "19:00:00");
                     }
                     else if (i == 24) {
-                        tv.setText("7:30-8:00pm");
+                        tv.setText("19:30-20:00");
+                        times_indoor.put(24, "19:30:00");
                     }
                     tv.setBackgroundColor(Color.WHITE);
                     tv.setTextColor(Color.parseColor("#737373"));
                     tv.setWidth( dpToPixel(100) );
                     tv.setTextSize( 15 );
                 }
-                else if (i%3 == 0 || j%3 == 0) {
-                    tv.setBackgroundColor(Color.LTGRAY);
-                    tv.setText("0");
-                    tv.getBackground().setAlpha(255);
-                }
+//                else if (i%3 == 0 || j%3 == 0) {
+//                    tv.setBackgroundColor(Color.LTGRAY);
+//                    tv.setText("0");
+//                    tv.getBackground().setAlpha(255);
+//                }
 
                 androidx.gridlayout.widget.GridLayout.LayoutParams lp = new androidx.gridlayout.widget.GridLayout.LayoutParams();
                 lp.setMargins(dpToPixel(1), dpToPixel(1), dpToPixel(1), dpToPixel(1));
@@ -455,6 +490,44 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                 grid2.addView(tv, lp);
 
                 cell_tvs_indoor.add(tv);
+            }
+
+        }
+
+        tooEarly = true;
+        tooLate = false;
+        for (int i = 1; i < 25; i++) {
+            for (Map.Entry<Integer, String> entry : times_indoor.entrySet()) {
+                if (entry.getKey().equals(i) && entry.getValue().equals(building.openTime)) {
+                    tooEarly = false;
+                }
+                else if ((entry.getKey().equals(i) && entry.getValue().equals(building.closeTime))) {
+                    tooLate = true;
+                }
+            }
+
+            for (int j = 1; j < 6; j++) {
+                TextView tv = findTextViewIndoor(i, j);
+
+                if (tooEarly || tooLate) {
+                    tv.setBackgroundColor(Color.LTGRAY);
+                    tv.getBackground().setAlpha(255);
+                    tv.setText("");
+                    continue;
+                }
+
+                String time = times_indoor.get(i);
+                String day = days_indoor.get(j);
+                String key = day + " " + time;
+
+                System.out.println(key);
+
+
+                double temp = (double) avails_indoor.get(key);
+
+                int seats = (int)Math.round(temp);
+
+                tv.setText(String.valueOf(seats));
             }
         }
 
@@ -470,6 +543,10 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         String str = tv.getText().toString();
 
         if (row == 0 || col == 0) {
+            return;
+        }
+
+        if (str.equals("")) {
             return;
         }
 
@@ -567,6 +644,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
     public void onClick(View view) {
         TextView tv = (TextView) view;
 
+
         int n = findIndexOfCellTextView(tv);
         int row = n/COLUMN_COUNT;
         int col = n%COLUMN_COUNT;
@@ -577,6 +655,9 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             return;
         }
 
+        if (str.equals("")) {
+            return;
+        }
 
         String idx = String.valueOf(row) + "," + String.valueOf(col);
         if (!selected_cells_idx.contains(idx)) {
