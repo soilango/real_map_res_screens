@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,11 +33,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+// TO DOS
+// see if user has current reservation -> display appropriate error
+// edit reservation screen stuff
+
 public class Reservation extends AppCompatActivity implements View.OnClickListener {
 
     boolean outdoorSelected = true;
 
     boolean thisWeek = true;
+
+    HashMap<String, Object> prevRes = new HashMap<>();
 
     String building_name = "";
 
@@ -71,6 +78,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
     private boolean newRes = true;
 
     private String uscId = "1111111111";
+
 
     // IF FALSE: change the header to 'edit reservation' and load past reservation
 
@@ -124,6 +132,11 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             throw new RuntimeException(e);
         }
 
+        if (newRes == false) {
+            Button b = (Button) findViewById(R.id.buttonReserve);
+            b.setText("Edit Reservation");
+        }
+
         outdoorSelected = true;
 
         cell_tvs = new ArrayList<>();
@@ -133,6 +146,83 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
         populateGrids();
 
+        if (!newRes) {
+            try {
+                loadRes();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
+    }
+
+    public void loadRes() throws IOException {
+        String url_string = "http://172.20.10.2:8080/getCurrentReservation?documentId=" + uscId;
+        URL url = new URL(url_string);
+        HttpURLConnection con = (HttpURLConnection)url.openConnection();
+        con.setRequestMethod("GET");
+        int status = con.getResponseCode();
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer content = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        in.close();
+
+        Gson gson = new Gson();
+//
+        prevRes = new Gson().fromJson(content.toString(), HashMap.class);
+
+//        populateRes();
+
+    }
+
+    public void populateRes() {
+        List<String> timeBlocks = (List<String>) prevRes.get("timeBlocks");
+        int j = 0;
+        String str = timeBlocks.get(0);
+        if (str.charAt(0) == 'M') {
+            j = 1;
+        }
+        else if (str.charAt(0) == 'T' && str.charAt(1) == 'h') {
+            j = 4;
+        }
+        else if (str.charAt(0) == 'T') {
+            j = 2;
+        }
+        else if (str.charAt(0) == 'W') {
+            j = 3;
+        }
+        else if (str.charAt(0) == 'F') {
+            j = 5;
+        }
+
+        List<String> times = new ArrayList<>();
+
+        for (int i = 0; i < timeBlocks.size(); i++) {
+            String st = timeBlocks.get(i);
+            times.add(st.substring(2));
+        }
+
+        List<Integer> rows = new ArrayList<>();
+
+
+        if (prevRes.get("indoor").equals("true")) {
+            for (int i = 0; i < times.size(); i++) {
+                for (Map.Entry<Integer, String> entry : times_indoor.entrySet()) {
+                    if (entry.getValue().equals(times.get(i))) {
+                        rows.add(entry.getKey());
+                    }
+                }
+            }
+
+
+        }
+        else {
+
+        }
 
     }
 
@@ -302,42 +392,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             }
         }
 
-        boolean tooEarly = true;
-        boolean tooLate = false;
-        for (int i = 1; i < 25; i++) {
-            for (Map.Entry<Integer, String> entry : times_outdoor.entrySet()) {
-                if (entry.getKey().equals(i) && entry.getValue().equals(building.openTime)) {
-                    tooEarly = false;
-                }
-                else if ((entry.getKey().equals(i) && entry.getValue().equals(building.closeTime))) {
-                    tooLate = true;
-                }
-            }
 
-            for (int j = 1; j < 6; j++) {
-                TextView tv = findTextView(i, j);
-
-                if (tooEarly || tooLate) {
-                    tv.setBackgroundColor(Color.LTGRAY);
-                    tv.getBackground().setAlpha(255);
-                    tv.setText("");
-                    continue;
-                }
-
-                String time = times_outdoor.get(i);
-                String day = days_outdoor.get(j);
-                String key = day + " " + time;
-
-                System.out.println(key);
-
-
-                double temp = (double) avails_outdoor.get(key);
-
-                int seats = (int)Math.round(temp);
-
-                tv.setText(String.valueOf(seats));
-            }
-        }
 
         androidx.gridlayout.widget.GridLayout grid2 = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout02);
 
@@ -505,12 +560,75 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
         }
 
+
+        putAvailability();
+
+
+
+    }
+
+    public void putAvailability() {
+        ImageView iv = (ImageView) findViewById(R.id.toggle);
+        iv.setImageResource(R.drawable.outdoor_long);
+        androidx.gridlayout.widget.GridLayout grid2 = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout02);
+        androidx.gridlayout.widget.GridLayout grid = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout01);
+
+
         grid.setVisibility(View.VISIBLE);
         grid2.setVisibility(View.GONE);
 
         outdoorSelected = true;
-        ImageView iv = (ImageView) findViewById(R.id.toggle);
-        iv.setImageResource(R.drawable.outdoor_long);
+
+        if (!newRes) {
+            if (thisWeek = false) {
+                ImageView imgView = (ImageView) findViewById(R.id.week_toggle);
+                imgView.setImageResource(R.drawable.next_week);
+            }
+            if (prevRes.get("indoor").equals("true")) {
+                outdoorSelected = false;
+                grid.setVisibility(View.GONE);
+                grid2.setVisibility(View.VISIBLE);
+            }
+        }
+
+
+
+        boolean tooEarly = true;
+        boolean tooLate = false;
+        for (int i = 1; i < 25; i++) {
+            for (Map.Entry<Integer, String> entry : times_outdoor.entrySet()) {
+                if (entry.getKey().equals(i) && entry.getValue().equals(building.openTime)) {
+                    tooEarly = false;
+                }
+                else if ((entry.getKey().equals(i) && entry.getValue().equals(building.closeTime))) {
+                    tooLate = true;
+                }
+            }
+
+            for (int j = 1; j < 6; j++) {
+                TextView tv = findTextView(i, j);
+
+                if (tooEarly || tooLate) {
+                    tv.setBackgroundColor(Color.LTGRAY);
+                    tv.getBackground().setAlpha(255);
+                    tv.setText("");
+                    continue;
+                }
+
+                String time = times_outdoor.get(i);
+                String day = days_outdoor.get(j);
+                String key = day + " " + time;
+
+                System.out.println(key);
+
+
+                double temp = (double) avails_outdoor.get(key);
+
+                int seats = (int)Math.round(temp);
+
+                tv.setText(String.valueOf(seats));
+            }
+        }
 
         tooEarly = true;
         tooLate = false;
@@ -548,6 +666,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                 tv.setText(String.valueOf(seats));
             }
         }
+
     }
 
     public void onClickTV_indoor(View view) {
@@ -1035,8 +1154,8 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
     public void toggle_week(View view) throws IOException {
         if (thisWeek) {
-            cell_tvs = new ArrayList<>();
-            cell_tvs_indoor = new ArrayList<>();
+//            cell_tvs = new ArrayList<>();
+//            cell_tvs_indoor = new ArrayList<>();
             ImageView iv = (ImageView) findViewById(R.id.week_toggle);
             iv.setImageResource(R.drawable.next_week);
             thisWeek = false;
@@ -1105,7 +1224,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
             con.disconnect();
 
-            populateGrids();
+            putAvailability();
 
         }
         else {
@@ -1114,8 +1233,8 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
             thisWeek = true;
 
-            cell_tvs = new ArrayList<>();
-            cell_tvs_indoor = new ArrayList<>();
+//            cell_tvs = new ArrayList<>();
+//            cell_tvs_indoor = new ArrayList<>();
 
             if (android.os.Build.VERSION.SDK_INT > 9) {
                 StrictMode.ThreadPolicy gfgPolicy =
@@ -1180,7 +1299,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             System.out.println(avails_outdoor);
 
             con.disconnect();
-            populateGrids();
+            putAvailability();
 
         }
     }
@@ -1245,14 +1364,34 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 //        }
 
 
+        if (!newRes) {
+            loadRes();
+        }
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+
+
         Date monday = cal.getTime();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         sdf.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+
         String res_week = sdf.format(monday);
+
+        if (!newRes) {
+            String d_string = (String) prevRes.get("date");
+            Date date = sdf.parse(d_string);
+            cal.add(Calendar.DATE, 7);
+            Date nextMon = cal.getTime();
+            if (date.compareTo(nextMon) >= 0) {
+                res_week = sdf.format(nextMon);
+            }
+            thisWeek = false;
+        }
+
+
 
         System.out.println(res_week);
 
