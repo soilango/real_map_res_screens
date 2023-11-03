@@ -12,9 +12,9 @@ public class Building {
     public double longitude;
     public String openTime;
     public String closeTime;
-    public List<Integer> buildingImage;
+    public String buildingImage;
 
-    public Building(String b_name, HashMap<String, Integer> in_avail, HashMap<String, Integer> out_avail, String desc, double lat, double lon, String o_time, String c_time, List<Integer> b_img) {
+    public Building(String b_name, HashMap<String, Integer> in_avail, HashMap<String, Integer> out_avail, String desc, double lat, double lon, String o_time, String c_time, String b_img) {
         buildingName = b_name;
         indoorAvailability = in_avail;
         outdoorAvailability = out_avail;

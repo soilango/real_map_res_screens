@@ -23,23 +23,23 @@
         android:onClick="backArrow"
     />
 
-    <TextView
-        android:id="@+id/screenTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-25dp"
-        android:gravity="center"
-        android:textSize="25dp"
-        android:layout_marginRight="5dp"
-        android:textStyle="bold"
-        android:fontFamily="@font/dmsans"
-        android:text="Make Reservation" />
+<!--    <TextView-->
+<!--        android:id="@+id/screenTitle"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="-25dp"-->
+<!--        android:gravity="center"-->
+<!--        android:textSize="25dp"-->
+<!--        android:layout_marginRight="5dp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:fontFamily="@font/dmsans"-->
+<!--        android:text="Make Reservation" />-->
 
     <TextView
         android:id="@+id/buildingTitle"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
+        android:layout_marginTop="-40dp"
         android:fontFamily="@font/dmsans"
         android:gravity="center"
         android:text="Taper Hall"
@@ -105,7 +105,7 @@
         android:layout_gravity="center"
         android:clickable="true"
         app:srcCompat="@drawable/this_week"
-        android:onClick="toggle"/>
+        />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
