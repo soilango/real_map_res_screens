@@ -36,6 +36,7 @@ import java.util.TimeZone;
 // TO DOS
 // see if user has current reservation -> display appropriate error
 // edit reservation screen stuff
+// DOUBLE CHECK EDIT WITH SWITCHING WEEK
 
 public class Reservation extends AppCompatActivity implements View.OnClickListener {
 
@@ -77,7 +78,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
     private static final int COLUMN_COUNT = 6;
 
-    private boolean newRes = false;
+    private boolean newRes = true;
 
     private String uscId = "1111111111";
 
@@ -1129,20 +1130,30 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                     timeBlocks.add(key);
                 }
 
-                int SDK_INT = android.os.Build.VERSION.SDK_INT;
-                if (SDK_INT > 9)
-                {
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                            .permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-                    //your codes here
 
-                }
 
             }
+
+            int SDK_INT = android.os.Build.VERSION.SDK_INT;
+            if (SDK_INT > 9)
+            {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                        .permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                //your codes here
+
+            }
+
             URL url = new URL("http://172.20.10.2:8080/makeReservation");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
+
+            if (!newRes) {
+                url = new URL("http://172.20.10.2:8080/editReservation");
+                con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("PUT");
+            }
+
             con.setRequestProperty("Accept", "application/json");
             con.setRequestProperty("Content-Type", "application/json");
 
@@ -1156,6 +1167,8 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             result += "]";
 
             Calendar cal = Calendar.getInstance();
+
+
 
             if (res_day.equals("M")) {
                 cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -1171,6 +1184,10 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             }
             if (res_day.equals("F")) {
                 cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+            }
+
+            if (!thisWeek) {
+                cal.add(Calendar.DATE, 7);
             }
 
             Date date = cal.getTime();
@@ -1194,6 +1211,13 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                     response.append(responseLine.trim());
                 }
                 System.out.println(response.toString());
+
+                TextView err = (TextView) findViewById(R.id.errorMsg);
+                if (response.equals("false")) {
+                    err.setText("Please cancel your current reservation to make a new one.");
+                    err.setVisibility(View.VISIBLE);
+                }
+
             }
             catch (MalformedURLException e) {
                 throw new RuntimeException(e);
@@ -1225,6 +1249,8 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
             cal.add(Calendar.DATE, 7);
             Date monday = cal.getTime();
+
+            System.out.println(monday);
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             sdf.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
