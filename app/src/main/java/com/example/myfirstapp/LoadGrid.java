@@ -359,7 +359,7 @@ class LoadGrid extends AsyncTask<Object, Void, androidx.gridlayout.widget.GridLa
         System.out.println(res_week);
 
         boolean isIndoor = true;
-        String url_string = "http://172.20.10.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+        String url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
         URL url = new URL(url_string);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
@@ -382,7 +382,7 @@ class LoadGrid extends AsyncTask<Object, Void, androidx.gridlayout.widget.GridLa
         System.out.println(avails_indoor);
 
         isIndoor = false;
-        url_string = "http://172.20.10.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+        url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
         url = new URL(url_string);
         con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");

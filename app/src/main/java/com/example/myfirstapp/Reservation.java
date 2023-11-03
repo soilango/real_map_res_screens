@@ -897,7 +897,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             StrictMode.setThreadPolicy(gfgPolicy);
         }
         System.out.println("here");
-        String url_string = "http://172.20.10.6:8080/getBuilding?documentId=" + building_name;
+        String url_string = "http://172.20.10.2:8080/getBuilding?documentId=" + building_name;
         URL url = new URL(url_string);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
@@ -949,7 +949,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         System.out.println(res_week);
 
         boolean isIndoor = true;
-        String url_string = "http://172.20.10.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+        String url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
         URL url = new URL(url_string);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
@@ -972,7 +972,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         System.out.println(avails_indoor);
 
         isIndoor = false;
-        url_string = "http://172.20.10.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+        url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
         url = new URL(url_string);
         con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
