@@ -121,415 +121,417 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
         outdoorSelected = true;
 
-        cell_tvs = new ArrayList<>();
-        selected_cells_idx = new ArrayList<>();
-        selected_cells_idx_indoor = new ArrayList<>();
-        cell_tvs_indoor = new ArrayList<>();
+//        cell_tvs = new ArrayList<>();
+//        selected_cells_idx = new ArrayList<>();
+//        selected_cells_idx_indoor = new ArrayList<>();
+//        cell_tvs_indoor = new ArrayList<>();
 
         androidx.gridlayout.widget.GridLayout grid = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout01);
-
-        for (int i = 0; i < 25; i++) {
-            for (int j = 0; j < 6; j++) {
-                TextView tv = new TextView(this);
-                tv.setHeight( dpToPixel(32) );
-                tv.setWidth( dpToPixel(55) );
-                tv.setTextSize( 16 );//dpToPixel(32) );
-                tv.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
-                tv.setTextColor(Color.WHITE);
-                tv.setBackgroundColor(Color.parseColor("#8A00C2"));
-                tv.setOnClickListener(this);
-
-                tv.getBackground().setAlpha(125);
-                tv.setText("1");
-
-                if (i == 0 && j == 0) {
-                    tv.setText("");
-                    tv.setBackgroundColor(Color.WHITE);
-                }
-                else if (i == 0) {
-                    tv.setBackgroundColor(Color.WHITE);
-                    tv.setTextColor(Color.parseColor("#737373"));
-                    if (j == 1) {
-                        tv.setText("M");
-                        days_outdoor.put(1, "M");
-                    }
-                    if (j == 2) {
-                        tv.setText("T");
-                        days_outdoor.put(2, "T");
-                    }
-                    if (j == 3) {
-                        tv.setText("W");
-                        days_outdoor.put(3, "W");
-                    }
-                    if (j == 4) {
-                        tv.setText("Th");
-                        days_outdoor.put(4, "Th");
-                    }
-                    if (j == 5) {
-                        tv.setText("F");
-                        days_outdoor.put(5, "F");
-                    }
-                }
-                else if (j == 0) {
-                    if (i == 1) {
-                        tv.setText("08:00-08:30");
-                        times_outdoor.put(1, "08:00:00");
-                    }
-                    else if (i == 2) {
-                        tv.setText("08:30-09:00");
-                        times_outdoor.put(2, "08:30:00");
-                    }
-                    else if (i == 3) {
-                        tv.setText("09:00-09:30");
-                        times_outdoor.put(3, "09:00:00");
-                    }
-                    else if (i == 4) {
-                        tv.setText("09:30-10:00");
-                        times_outdoor.put(4, "09:30:00");
-                    }
-                    else if (i == 5) {
-                        tv.setText("10:00-10:30");
-                        times_outdoor.put(5, "10:00:00");
-                    }
-                    else if (i == 6) {
-                        tv.setText("10:30-11:00");
-                        times_outdoor.put(6, "10:30:00");
-                    }
-                    else if (i == 7) {
-                        tv.setText("11:00-11:30");
-                        times_outdoor.put(7, "11:00:00");
-                    }
-                    else if (i == 8) {
-                        tv.setText("11:30-12:00");
-                        times_outdoor.put(8, "11:30:00");
-                    }
-                    else if (i == 9) {
-                        tv.setText("12:00-12:30");
-                        times_outdoor.put(9, "12:00:00");
-                    }
-                    else if (i == 10) {
-                        tv.setText("12:30-13:00");
-                        times_outdoor.put(10, "12:30:00");
-                    }
-                    else if (i == 11) {
-                        tv.setText("13:00-13:30");
-                        times_outdoor.put(11, "13:00:00");
-                    }
-                    else if (i == 12) {
-                        tv.setText("13:30-14:00");
-                        times_outdoor.put(12, "13:30:00");
-                    }
-                    else if (i == 13) {
-                        tv.setText("14:00-14:30");
-                        times_outdoor.put(13, "14:00:00");
-                    }
-                    else if (i == 14) {
-                        tv.setText("14:30-15:00");
-                        times_outdoor.put(14, "14:30:00");
-                    }
-                    else if (i == 15) {
-                        tv.setText("15:00-15:30");
-                        times_outdoor.put(15, "15:00:00");
-                    }
-                    else if (i == 16) {
-                        tv.setText("15:30-16:00");
-                        times_outdoor.put(16, "15:30:00");
-                    }
-                    else if (i == 17) {
-                        tv.setText("16:00-16:30");
-                        times_outdoor.put(17, "16:00:00");
-                    }
-                    else if (i == 18) {
-                        tv.setText("16:30-17:00");
-                        times_outdoor.put(18, "16:30:00");
-                    }
-                    else if (i == 19) {
-                        tv.setText("17:00-17:30");
-                        times_outdoor.put(19, "17:00:00");
-                    }
-                    else if (i == 20) {
-                        tv.setText("17:30-18:00");
-                        times_outdoor.put(20, "17:30:00");
-                    }
-                    else if (i == 21) {
-                        tv.setText("18:00-18:30");
-                        times_outdoor.put(21, "18:00:00");
-                    }
-                    else if (i == 22) {
-                        tv.setText("18:30-19:00");
-                        times_outdoor.put(22, "18:30:00");
-                    }
-                    else if (i == 23) {
-                        tv.setText("19:00-19:30");
-                        times_outdoor.put(23, "19:00:00");
-                    }
-                    else if (i == 24) {
-                        tv.setText("19:30-20:00");
-                        times_outdoor.put(24, "19:30:00");
-                    }
-
-                    tv.setBackgroundColor(Color.WHITE);
-                    tv.setTextColor(Color.parseColor("#737373"));
-                    tv.setWidth( dpToPixel(100) );
-                    tv.setTextSize( 15 );
-                }
-
-                // ADD FUNCTIONALITY FOR WHEN NO SEATS AVAILABLE
-//                tv.setBackgroundColor(Color.LTGRAY);
-//                tv.setText("0");
-//                tv.getBackground().setAlpha(255);
-
-
-                androidx.gridlayout.widget.GridLayout.LayoutParams lp = new androidx.gridlayout.widget.GridLayout.LayoutParams();
-                lp.setMargins(dpToPixel(1), dpToPixel(1), dpToPixel(1), dpToPixel(1));
-                lp.rowSpec = androidx.gridlayout.widget.GridLayout.spec(i);
-                lp.columnSpec = GridLayout.spec(j);
-
-                grid.addView(tv, lp);
-
-                cell_tvs.add(tv);
-            }
-        }
-
-        boolean tooEarly = true;
-        boolean tooLate = false;
-        for (int i = 1; i < 25; i++) {
-            for (Map.Entry<Integer, String> entry : times_outdoor.entrySet()) {
-                if (entry.getKey().equals(i) && entry.getValue().equals(building.openTime)) {
-                    tooEarly = false;
-                }
-                else if ((entry.getKey().equals(i) && entry.getValue().equals(building.closeTime))) {
-                    tooLate = true;
-                }
-            }
-
-            for (int j = 1; j < 6; j++) {
-                TextView tv = findTextView(i, j);
-
-                if (tooEarly || tooLate) {
-                    tv.setBackgroundColor(Color.LTGRAY);
-                    tv.getBackground().setAlpha(255);
-                    tv.setText("");
-                    continue;
-                }
-
-                String time = times_outdoor.get(i);
-                String day = days_outdoor.get(j);
-                String key = day + " " + time;
-
-                System.out.println(key);
-
-
-                double temp = (double) avails_outdoor.get(key);
-
-                int seats = (int)Math.round(temp);
-
-                tv.setText(String.valueOf(seats));
-            }
-        }
-
         androidx.gridlayout.widget.GridLayout grid2 = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.gridLayout02);
+        new LoadGrid(grid, grid2, building_name, this).execute();
 
-        for (int i = 0; i < 25; i++) {
-            for (int j = 0; j < 6; j++) {
-                TextView tv = new TextView(this);
-                tv.setHeight( dpToPixel(32) );
-                tv.setWidth( dpToPixel(55) );
-                tv.setTextSize( 16 );//dpToPixel(32) );
-                tv.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
-                tv.setTextColor(Color.WHITE);
-                tv.setBackgroundColor(Color.parseColor("#8A00C2"));
-                tv.setOnClickListener(this::onClickTV_indoor);
-                tv.setClickable(true);
-                tv.setFocusable(true);
-
-                tv.getBackground().setAlpha(125);
-                tv.setText("1");
-
-                if (i == 0 && j == 0) {
-                    tv.setText("");
-                    tv.setBackgroundColor(Color.WHITE);
-                }
-                else if (i == 0) {
-                    tv.setBackgroundColor(Color.WHITE);
-                    tv.setTextColor(Color.parseColor("#737373"));
-                    if (j == 1) {
-                        tv.setText("M");
-                        days_indoor.put(1, "M");
-                    }
-                    if (j == 2) {
-                        tv.setText("T");
-                        days_indoor.put(2, "T");
-                    }
-                    if (j == 3) {
-                        tv.setText("W");
-                        days_indoor.put(3, "W");
-                    }
-                    if (j == 4) {
-                        tv.setText("Th");
-                        days_indoor.put(4, "Th");
-                    }
-                    if (j == 5) {
-                        tv.setText("F");
-                        days_indoor.put(5, "F");
-                    }
-                }
-                else if (j == 0) {
-                    if (i == 1) {
-                        tv.setText("08:00-08:30");
-                        times_indoor.put(1, "08:00:00");
-                    }
-                    else if (i == 2) {
-                        tv.setText("08:30-09:00");
-                        times_indoor.put(2, "08:30:00");
-                    }
-                    else if (i == 3) {
-                        tv.setText("09:00-09:30");
-                        times_indoor.put(3, "09:00:00");
-                    }
-                    else if (i == 4) {
-                        tv.setText("09:30-10:00");
-                        times_indoor.put(4, "09:30:00");
-                    }
-                    else if (i == 5) {
-                        tv.setText("10:00-10:30");
-                        times_indoor.put(5, "10:00:00");
-                    }
-                    else if (i == 6) {
-                        tv.setText("10:30-11:00");
-                        times_indoor.put(6, "10:30:00");
-                    }
-                    else if (i == 7) {
-                        tv.setText("11:00-11:30");
-                        times_indoor.put(7, "11:00:00");
-                    }
-                    else if (i == 8) {
-                        tv.setText("11:30-12:00");
-                        times_indoor.put(8, "11:30:00");
-                    }
-                    else if (i == 9) {
-                        tv.setText("12:00-12:30");
-                        times_indoor.put(9, "12:00:00");
-                    }
-                    else if (i == 10) {
-                        tv.setText("12:30-13:00");
-                        times_indoor.put(10, "12:30:00");
-                    }
-                    else if (i == 11) {
-                        tv.setText("13:00-13:30");
-                        times_indoor.put(11, "13:00:00");
-                    }
-                    else if (i == 12) {
-                        tv.setText("13:30-14:00");
-                        times_indoor.put(12, "13:30:00");
-                    }
-                    else if (i == 13) {
-                        tv.setText("14:00-14:30");
-                        times_indoor.put(13, "14:00:00");
-                    }
-                    else if (i == 14) {
-                        tv.setText("14:30-15:00");
-                        times_indoor.put(14, "14:30:00");
-                    }
-                    else if (i == 15) {
-                        tv.setText("15:00-15:30");
-                        times_indoor.put(15, "15:00:00");
-                    }
-                    else if (i == 16) {
-                        tv.setText("15:30-16:00");
-                        times_indoor.put(16, "15:30:00");
-                    }
-                    else if (i == 17) {
-                        tv.setText("16:00-16:30");
-                        times_indoor.put(17, "16:00:00");
-                    }
-                    else if (i == 18) {
-                        tv.setText("16:30-17:00");
-                        times_indoor.put(18, "16:30:00");
-                    }
-                    else if (i == 19) {
-                        tv.setText("17:00-17:30");
-                        times_indoor.put(19, "17:00:00");
-                    }
-                    else if (i == 20) {
-                        tv.setText("17:30-18:00");
-                        times_indoor.put(20, "17:30:00");
-                    }
-                    else if (i == 21) {
-                        tv.setText("18:00-18:30");
-                        times_indoor.put(21, "18:00:00");
-                    }
-                    else if (i == 22) {
-                        tv.setText("18:30-19:00");
-                        times_indoor.put(22, "18:30:00");
-                    }
-                    else if (i == 23) {
-                        tv.setText("19:00-19:30");
-                        times_indoor.put(23, "19:00:00");
-                    }
-                    else if (i == 24) {
-                        tv.setText("19:30-20:00");
-                        times_indoor.put(24, "19:30:00");
-                    }
-                    tv.setBackgroundColor(Color.WHITE);
-                    tv.setTextColor(Color.parseColor("#737373"));
-                    tv.setWidth( dpToPixel(100) );
-                    tv.setTextSize( 15 );
-                }
-//                else if (i%3 == 0 || j%3 == 0) {
-//                    tv.setBackgroundColor(Color.LTGRAY);
-//                    tv.setText("0");
-//                    tv.getBackground().setAlpha(255);
+//        for (int i = 0; i < 25; i++) {
+//            for (int j = 0; j < 6; j++) {
+//                TextView tv = new TextView(this);
+//                tv.setHeight( dpToPixel(32) );
+//                tv.setWidth( dpToPixel(55) );
+//                tv.setTextSize( 16 );//dpToPixel(32) );
+//                tv.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+//                tv.setTextColor(Color.WHITE);
+//                tv.setBackgroundColor(Color.parseColor("#8A00C2"));
+//                tv.setOnClickListener(this);
+//
+//                tv.getBackground().setAlpha(125);
+//                tv.setText("1");
+//
+//                if (i == 0 && j == 0) {
+//                    tv.setText("");
+//                    tv.setBackgroundColor(Color.WHITE);
 //                }
+//                else if (i == 0) {
+//                    tv.setBackgroundColor(Color.WHITE);
+//                    tv.setTextColor(Color.parseColor("#737373"));
+//                    if (j == 1) {
+//                        tv.setText("M");
+//                        days_outdoor.put(1, "M");
+//                    }
+//                    if (j == 2) {
+//                        tv.setText("T");
+//                        days_outdoor.put(2, "T");
+//                    }
+//                    if (j == 3) {
+//                        tv.setText("W");
+//                        days_outdoor.put(3, "W");
+//                    }
+//                    if (j == 4) {
+//                        tv.setText("Th");
+//                        days_outdoor.put(4, "Th");
+//                    }
+//                    if (j == 5) {
+//                        tv.setText("F");
+//                        days_outdoor.put(5, "F");
+//                    }
+//                }
+//                else if (j == 0) {
+//                    if (i == 1) {
+//                        tv.setText("08:00-08:30");
+//                        times_outdoor.put(1, "08:00:00");
+//                    }
+//                    else if (i == 2) {
+//                        tv.setText("08:30-09:00");
+//                        times_outdoor.put(2, "08:30:00");
+//                    }
+//                    else if (i == 3) {
+//                        tv.setText("09:00-09:30");
+//                        times_outdoor.put(3, "09:00:00");
+//                    }
+//                    else if (i == 4) {
+//                        tv.setText("09:30-10:00");
+//                        times_outdoor.put(4, "09:30:00");
+//                    }
+//                    else if (i == 5) {
+//                        tv.setText("10:00-10:30");
+//                        times_outdoor.put(5, "10:00:00");
+//                    }
+//                    else if (i == 6) {
+//                        tv.setText("10:30-11:00");
+//                        times_outdoor.put(6, "10:30:00");
+//                    }
+//                    else if (i == 7) {
+//                        tv.setText("11:00-11:30");
+//                        times_outdoor.put(7, "11:00:00");
+//                    }
+//                    else if (i == 8) {
+//                        tv.setText("11:30-12:00");
+//                        times_outdoor.put(8, "11:30:00");
+//                    }
+//                    else if (i == 9) {
+//                        tv.setText("12:00-12:30");
+//                        times_outdoor.put(9, "12:00:00");
+//                    }
+//                    else if (i == 10) {
+//                        tv.setText("12:30-13:00");
+//                        times_outdoor.put(10, "12:30:00");
+//                    }
+//                    else if (i == 11) {
+//                        tv.setText("13:00-13:30");
+//                        times_outdoor.put(11, "13:00:00");
+//                    }
+//                    else if (i == 12) {
+//                        tv.setText("13:30-14:00");
+//                        times_outdoor.put(12, "13:30:00");
+//                    }
+//                    else if (i == 13) {
+//                        tv.setText("14:00-14:30");
+//                        times_outdoor.put(13, "14:00:00");
+//                    }
+//                    else if (i == 14) {
+//                        tv.setText("14:30-15:00");
+//                        times_outdoor.put(14, "14:30:00");
+//                    }
+//                    else if (i == 15) {
+//                        tv.setText("15:00-15:30");
+//                        times_outdoor.put(15, "15:00:00");
+//                    }
+//                    else if (i == 16) {
+//                        tv.setText("15:30-16:00");
+//                        times_outdoor.put(16, "15:30:00");
+//                    }
+//                    else if (i == 17) {
+//                        tv.setText("16:00-16:30");
+//                        times_outdoor.put(17, "16:00:00");
+//                    }
+//                    else if (i == 18) {
+//                        tv.setText("16:30-17:00");
+//                        times_outdoor.put(18, "16:30:00");
+//                    }
+//                    else if (i == 19) {
+//                        tv.setText("17:00-17:30");
+//                        times_outdoor.put(19, "17:00:00");
+//                    }
+//                    else if (i == 20) {
+//                        tv.setText("17:30-18:00");
+//                        times_outdoor.put(20, "17:30:00");
+//                    }
+//                    else if (i == 21) {
+//                        tv.setText("18:00-18:30");
+//                        times_outdoor.put(21, "18:00:00");
+//                    }
+//                    else if (i == 22) {
+//                        tv.setText("18:30-19:00");
+//                        times_outdoor.put(22, "18:30:00");
+//                    }
+//                    else if (i == 23) {
+//                        tv.setText("19:00-19:30");
+//                        times_outdoor.put(23, "19:00:00");
+//                    }
+//                    else if (i == 24) {
+//                        tv.setText("19:30-20:00");
+//                        times_outdoor.put(24, "19:30:00");
+//                    }
+//
+//                    tv.setBackgroundColor(Color.WHITE);
+//                    tv.setTextColor(Color.parseColor("#737373"));
+//                    tv.setWidth( dpToPixel(100) );
+//                    tv.setTextSize( 15 );
+//                }
+//
+//                // ADD FUNCTIONALITY FOR WHEN NO SEATS AVAILABLE
+////                tv.setBackgroundColor(Color.LTGRAY);
+////                tv.setText("0");
+////                tv.getBackground().setAlpha(255);
+//
+//
+//                androidx.gridlayout.widget.GridLayout.LayoutParams lp = new androidx.gridlayout.widget.GridLayout.LayoutParams();
+//                lp.setMargins(dpToPixel(1), dpToPixel(1), dpToPixel(1), dpToPixel(1));
+//                lp.rowSpec = androidx.gridlayout.widget.GridLayout.spec(i);
+//                lp.columnSpec = GridLayout.spec(j);
+//
+//                grid.addView(tv, lp);
+//
+//                cell_tvs.add(tv);
+//            }
+//        }
+//
+//        boolean tooEarly = true;
+//        boolean tooLate = false;
+//        for (int i = 1; i < 25; i++) {
+//            for (Map.Entry<Integer, String> entry : times_outdoor.entrySet()) {
+//                if (entry.getKey().equals(i) && entry.getValue().equals(building.openTime)) {
+//                    tooEarly = false;
+//                }
+//                else if ((entry.getKey().equals(i) && entry.getValue().equals(building.closeTime))) {
+//                    tooLate = true;
+//                }
+//            }
+//
+//            for (int j = 1; j < 6; j++) {
+//                TextView tv = findTextView(i, j);
+//
+//                if (tooEarly || tooLate) {
+//                    tv.setBackgroundColor(Color.LTGRAY);
+//                    tv.getBackground().setAlpha(255);
+//                    tv.setText("");
+//                    continue;
+//                }
+//
+//                String time = times_outdoor.get(i);
+//                String day = days_outdoor.get(j);
+//                String key = day + " " + time;
+//
+//                System.out.println(key);
+//
+//
+//                double temp = (double) avails_outdoor.get(key);
+//
+//                int seats = (int)Math.round(temp);
+//
+//                tv.setText(String.valueOf(seats));
+//            }
+//        }
 
-                androidx.gridlayout.widget.GridLayout.LayoutParams lp = new androidx.gridlayout.widget.GridLayout.LayoutParams();
-                lp.setMargins(dpToPixel(1), dpToPixel(1), dpToPixel(1), dpToPixel(1));
-                lp.rowSpec = androidx.gridlayout.widget.GridLayout.spec(i);
-                lp.columnSpec = GridLayout.spec(j);
-
-                grid2.addView(tv, lp);
-
-                cell_tvs_indoor.add(tv);
-            }
-
-        }
-
-        tooEarly = true;
-        tooLate = false;
-        for (int i = 1; i < 25; i++) {
-            for (Map.Entry<Integer, String> entry : times_indoor.entrySet()) {
-                if (entry.getKey().equals(i) && entry.getValue().equals(building.openTime)) {
-                    tooEarly = false;
-                }
-                else if ((entry.getKey().equals(i) && entry.getValue().equals(building.closeTime))) {
-                    tooLate = true;
-                }
-            }
-
-            for (int j = 1; j < 6; j++) {
-                TextView tv = findTextViewIndoor(i, j);
-
-                if (tooEarly || tooLate) {
-                    tv.setBackgroundColor(Color.LTGRAY);
-                    tv.getBackground().setAlpha(255);
-                    tv.setText("");
-                    continue;
-                }
-
-                String time = times_indoor.get(i);
-                String day = days_indoor.get(j);
-                String key = day + " " + time;
-
-                System.out.println(key);
 
 
-                double temp = (double) avails_indoor.get(key);
-
-                int seats = (int)Math.round(temp);
-
-                tv.setText(String.valueOf(seats));
-            }
-        }
+//        for (int i = 0; i < 25; i++) {
+//            for (int j = 0; j < 6; j++) {
+//                TextView tv = new TextView(this);
+//                tv.setHeight( dpToPixel(32) );
+//                tv.setWidth( dpToPixel(55) );
+//                tv.setTextSize( 16 );//dpToPixel(32) );
+//                tv.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+//                tv.setTextColor(Color.WHITE);
+//                tv.setBackgroundColor(Color.parseColor("#8A00C2"));
+//                tv.setOnClickListener(this::onClickTV_indoor);
+//                tv.setClickable(true);
+//                tv.setFocusable(true);
+//
+//                tv.getBackground().setAlpha(125);
+//                tv.setText("1");
+//
+//                if (i == 0 && j == 0) {
+//                    tv.setText("");
+//                    tv.setBackgroundColor(Color.WHITE);
+//                }
+//                else if (i == 0) {
+//                    tv.setBackgroundColor(Color.WHITE);
+//                    tv.setTextColor(Color.parseColor("#737373"));
+//                    if (j == 1) {
+//                        tv.setText("M");
+//                        days_indoor.put(1, "M");
+//                    }
+//                    if (j == 2) {
+//                        tv.setText("T");
+//                        days_indoor.put(2, "T");
+//                    }
+//                    if (j == 3) {
+//                        tv.setText("W");
+//                        days_indoor.put(3, "W");
+//                    }
+//                    if (j == 4) {
+//                        tv.setText("Th");
+//                        days_indoor.put(4, "Th");
+//                    }
+//                    if (j == 5) {
+//                        tv.setText("F");
+//                        days_indoor.put(5, "F");
+//                    }
+//                }
+//                else if (j == 0) {
+//                    if (i == 1) {
+//                        tv.setText("08:00-08:30");
+//                        times_indoor.put(1, "08:00:00");
+//                    }
+//                    else if (i == 2) {
+//                        tv.setText("08:30-09:00");
+//                        times_indoor.put(2, "08:30:00");
+//                    }
+//                    else if (i == 3) {
+//                        tv.setText("09:00-09:30");
+//                        times_indoor.put(3, "09:00:00");
+//                    }
+//                    else if (i == 4) {
+//                        tv.setText("09:30-10:00");
+//                        times_indoor.put(4, "09:30:00");
+//                    }
+//                    else if (i == 5) {
+//                        tv.setText("10:00-10:30");
+//                        times_indoor.put(5, "10:00:00");
+//                    }
+//                    else if (i == 6) {
+//                        tv.setText("10:30-11:00");
+//                        times_indoor.put(6, "10:30:00");
+//                    }
+//                    else if (i == 7) {
+//                        tv.setText("11:00-11:30");
+//                        times_indoor.put(7, "11:00:00");
+//                    }
+//                    else if (i == 8) {
+//                        tv.setText("11:30-12:00");
+//                        times_indoor.put(8, "11:30:00");
+//                    }
+//                    else if (i == 9) {
+//                        tv.setText("12:00-12:30");
+//                        times_indoor.put(9, "12:00:00");
+//                    }
+//                    else if (i == 10) {
+//                        tv.setText("12:30-13:00");
+//                        times_indoor.put(10, "12:30:00");
+//                    }
+//                    else if (i == 11) {
+//                        tv.setText("13:00-13:30");
+//                        times_indoor.put(11, "13:00:00");
+//                    }
+//                    else if (i == 12) {
+//                        tv.setText("13:30-14:00");
+//                        times_indoor.put(12, "13:30:00");
+//                    }
+//                    else if (i == 13) {
+//                        tv.setText("14:00-14:30");
+//                        times_indoor.put(13, "14:00:00");
+//                    }
+//                    else if (i == 14) {
+//                        tv.setText("14:30-15:00");
+//                        times_indoor.put(14, "14:30:00");
+//                    }
+//                    else if (i == 15) {
+//                        tv.setText("15:00-15:30");
+//                        times_indoor.put(15, "15:00:00");
+//                    }
+//                    else if (i == 16) {
+//                        tv.setText("15:30-16:00");
+//                        times_indoor.put(16, "15:30:00");
+//                    }
+//                    else if (i == 17) {
+//                        tv.setText("16:00-16:30");
+//                        times_indoor.put(17, "16:00:00");
+//                    }
+//                    else if (i == 18) {
+//                        tv.setText("16:30-17:00");
+//                        times_indoor.put(18, "16:30:00");
+//                    }
+//                    else if (i == 19) {
+//                        tv.setText("17:00-17:30");
+//                        times_indoor.put(19, "17:00:00");
+//                    }
+//                    else if (i == 20) {
+//                        tv.setText("17:30-18:00");
+//                        times_indoor.put(20, "17:30:00");
+//                    }
+//                    else if (i == 21) {
+//                        tv.setText("18:00-18:30");
+//                        times_indoor.put(21, "18:00:00");
+//                    }
+//                    else if (i == 22) {
+//                        tv.setText("18:30-19:00");
+//                        times_indoor.put(22, "18:30:00");
+//                    }
+//                    else if (i == 23) {
+//                        tv.setText("19:00-19:30");
+//                        times_indoor.put(23, "19:00:00");
+//                    }
+//                    else if (i == 24) {
+//                        tv.setText("19:30-20:00");
+//                        times_indoor.put(24, "19:30:00");
+//                    }
+//                    tv.setBackgroundColor(Color.WHITE);
+//                    tv.setTextColor(Color.parseColor("#737373"));
+//                    tv.setWidth( dpToPixel(100) );
+//                    tv.setTextSize( 15 );
+//                }
+////                else if (i%3 == 0 || j%3 == 0) {
+////                    tv.setBackgroundColor(Color.LTGRAY);
+////                    tv.setText("0");
+////                    tv.getBackground().setAlpha(255);
+////                }
+//
+//                androidx.gridlayout.widget.GridLayout.LayoutParams lp = new androidx.gridlayout.widget.GridLayout.LayoutParams();
+//                lp.setMargins(dpToPixel(1), dpToPixel(1), dpToPixel(1), dpToPixel(1));
+//                lp.rowSpec = androidx.gridlayout.widget.GridLayout.spec(i);
+//                lp.columnSpec = GridLayout.spec(j);
+//
+//                grid2.addView(tv, lp);
+//
+//                cell_tvs_indoor.add(tv);
+//            }
+//
+//        }
+//
+//        tooEarly = true;
+//        tooLate = false;
+//        for (int i = 1; i < 25; i++) {
+//            for (Map.Entry<Integer, String> entry : times_indoor.entrySet()) {
+//                if (entry.getKey().equals(i) && entry.getValue().equals(building.openTime)) {
+//                    tooEarly = false;
+//                }
+//                else if ((entry.getKey().equals(i) && entry.getValue().equals(building.closeTime))) {
+//                    tooLate = true;
+//                }
+//            }
+//
+//            for (int j = 1; j < 6; j++) {
+//                TextView tv = findTextViewIndoor(i, j);
+//
+//                if (tooEarly || tooLate) {
+//                    tv.setBackgroundColor(Color.LTGRAY);
+//                    tv.getBackground().setAlpha(255);
+//                    tv.setText("");
+//                    continue;
+//                }
+//
+//                String time = times_indoor.get(i);
+//                String day = days_indoor.get(j);
+//                String key = day + " " + time;
+//
+//                System.out.println(key);
+//
+//
+//                double temp = (double) avails_indoor.get(key);
+//
+//                int seats = (int)Math.round(temp);
+//
+//                tv.setText(String.valueOf(seats));
+//            }
+//        }
 
     }
 
