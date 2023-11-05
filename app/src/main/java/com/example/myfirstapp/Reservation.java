@@ -5,9 +5,12 @@ import androidx.gridlayout.widget.GridLayout;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,10 +36,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-// TO DOS
-// see if user has current reservation -> display appropriate error
-// edit reservation screen stuff
-// DOUBLE CHECK EDIT WITH SWITCHING WEEK
+// TO DO
+/*
+* 1. increase image quality
+* 2. figure out how to share google api key
+* */
 
 public class Reservation extends AppCompatActivity implements View.OnClickListener {
 
@@ -80,10 +84,8 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
     private boolean newRes = true;
 
-    private String uscId = "1111111111";
+    private String uscId = "3333333333";
 
-
-    // IF FALSE: change the header to 'edit reservation' and load past reservation
 
     private int findIndexOfCellTextView(TextView tv) {
         for (int n=0; n<cell_tvs.size(); n++) {
@@ -125,9 +127,21 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         TextView b_desc = (TextView) findViewById(R.id.buildingDescription);
         // do same for building image
 
+        ImageView b_img = (ImageView) findViewById(R.id.buildingImg);
+
+
         b_name.setText(building_name);
 
         b_desc.setText(building.description);
+
+        String img_str = building.buildingImage;
+        img_str = img_str.replaceAll("%", "\n");
+        if (img_str != null) {
+            byte[] im = Base64.decode(img_str, Base64.DEFAULT);
+            System.out.println(im);
+            Bitmap bmp = BitmapFactory.decodeByteArray(im, 0, im.length);
+            b_img.setImageBitmap(Bitmap.createScaledBitmap(bmp, 62, 80, false));
+        }
 
         try {
             getBuildingAvailability();
@@ -165,7 +179,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
     }
 
     public void loadRes() throws IOException {
-        String url_string = "http://172.20.10.2:8080/getCurrentReservation?documentId=" + uscId;
+        String url_string = "http://34.125.226.6:8080/getCurrentReservation?documentId=" + uscId;
         URL url = new URL(url_string);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
@@ -216,7 +230,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         List<Integer> rows = new ArrayList<>();
 
 
-        if (prevRes.get("indoor").equals("true")) {
+        if ((prevRes.get("indoor").toString()).equals("true")) {
             for (int i = 0; i < times.size(); i++) {
                 for (Map.Entry<Integer, String> entry : times_indoor.entrySet()) {
                     if (entry.getValue().equals(times.get(i))) {
@@ -237,9 +251,13 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             for (int i = 0; i < rows.size(); i++) {
                 int row = rows.get(i);
                 TextView tv = findTextViewIndoor(row, j);
-                tv.setBackgroundColor(Color.RED);
-                String idx = String.valueOf(row) + "," + String.valueOf(j);
-                selected_cells_idx_indoor.add(idx);
+                String tv_str = (String) tv.getText();
+                if (tv_str.equals("")  == false) {
+                    tv.setBackgroundColor(Color.parseColor("#8A00C2"));
+                    tv.getBackground().setAlpha(255);
+                    String idx = String.valueOf(row) + "," + String.valueOf(j);
+                    selected_cells_idx_indoor.add(idx);
+                }
             }
 
         }
@@ -265,9 +283,13 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             for (int i = 0; i < rows.size(); i++) {
                 int row = rows.get(i);
                 TextView tv = findTextView(row, j);
-                tv.setBackgroundColor(Color.RED);
-                String idx = String.valueOf(row) + "," + String.valueOf(j);
-                selected_cells_idx.add(idx);
+                String tv_str = (String) tv.getText();
+                if (tv_str.equals("")  == false) {
+                    tv.setBackgroundColor(Color.parseColor("#8A00C2"));
+                    tv.getBackground().setAlpha(255);
+                    String idx = String.valueOf(row) + "," + String.valueOf(j);
+                    selected_cells_idx.add(idx);
+                }
             }
 
         }
@@ -458,11 +480,12 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                 tv.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
                 tv.setTextColor(Color.WHITE);
                 tv.setBackgroundColor(Color.parseColor("#8A00C2"));
+                tv.getBackground().setAlpha(125);
                 tv.setOnClickListener(this::onClickTV_indoor);
                 tv.setClickable(true);
                 tv.setFocusable(true);
 
-                tv.getBackground().setAlpha(125);
+
                 tv.setText("1");
 
                 if (i == 0 && j == 0) {
@@ -616,8 +639,94 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
         putAvailability();
 
+        if (newRes || resWeekThis) {
+            putPastTimes();
+        }
+
+    }
+
+    public void putPastTimes() {
+        // IMPLEMENT FOR TIMES AS WELL AS DAYS
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+
+        // CHANGE BACK TO THISS!!!!
+        cal.setTime(date);
 
 
+//        cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        //sunday or saturday
+        if (dayOfWeek == 1 || dayOfWeek == 7) {
+            for (int i = 1; i < 25; i++) {
+                for (int j = 1; j < 6; j++) {
+                    TextView tv1 = findTextView(i, j);
+                    TextView tv2 = findTextViewIndoor(i, j);
+
+                    tv1.setBackgroundColor(Color.LTGRAY);
+                    tv2.setBackgroundColor(Color.LTGRAY);
+
+                    tv1.setText("");
+                    tv2.setText("");
+
+                }
+            }
+
+        }
+        // monday, tuesday, wednesday, thursday, friday
+        else {
+            for (int i = 1; i < 25; i++) {
+                for (int j = 1; j < 6; j++) {
+                    if (j+1 < dayOfWeek) {
+                        TextView tv1 = findTextView(i, j);
+                        TextView tv2 = findTextViewIndoor(i, j);
+
+                        tv1.setBackgroundColor(Color.LTGRAY);
+                        tv2.setBackgroundColor(Color.LTGRAY);
+
+                        tv1.setText("");
+                        tv2.setText("");
+                    }
+                }
+            }
+            int mins = cal.get(Calendar.MINUTE);
+//            int hours = cal.get(Calendar.HOUR);
+
+            if (mins < 30) {
+                mins = 0;
+            }
+            else {
+                mins = 30;
+            }
+
+            cal.set(Calendar.MINUTE, mins);
+
+            date = cal.getTime();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:00");
+            sdf.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+            String time = sdf.format(date);
+            System.out.println("CURRENT TIME BLOCK IS " + time);
+
+            // loop through the time blocks INCLUDING the curr time block & set gray
+            int row = 0;
+            for (Map.Entry<Integer, String> entry : times_indoor.entrySet()) {
+                if (entry.getValue().equals(time)) {
+                    row = entry.getKey();
+                    break;
+                }
+            }
+            for (int i = 1; i <= row; i++) {
+                TextView tv1 = findTextView(i, dayOfWeek-1);
+                TextView tv2 = findTextViewIndoor(i, dayOfWeek-1);
+
+                tv1.setBackgroundColor(Color.LTGRAY);
+                tv2.setBackgroundColor(Color.LTGRAY);
+
+                tv1.setText("");
+                tv2.setText("");
+            }
+        }
     }
 
     public void putAvailability() {
@@ -660,6 +769,8 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
             for (int j = 1; j < 6; j++) {
                 TextView tv = findTextView(i, j);
+                tv.setBackgroundColor(Color.parseColor("#8A00C2"));
+                tv.getBackground().setAlpha(125);
 
                 if (tooEarly || tooLate) {
                     tv.setBackgroundColor(Color.LTGRAY);
@@ -697,6 +808,8 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
             for (int j = 1; j < 6; j++) {
                 TextView tv = findTextViewIndoor(i, j);
+                tv.setBackgroundColor(Color.parseColor("#8A00C2"));
+                tv.getBackground().setAlpha(125);
 
                 if (tooEarly || tooLate) {
                     tv.setBackgroundColor(Color.LTGRAY);
@@ -722,7 +835,14 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
     }
 
+    public void clearErr() {
+        TextView err = (TextView) findViewById(R.id.errorMsg);
+        err.setVisibility(View.INVISIBLE);
+    }
+
     public void onClickTV_indoor(View view) {
+        clearErr();
+
         TextView tv = (TextView) view;
 
         int n = findIndexofCellTextViewIndoor(tv);
@@ -831,6 +951,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
     }
 
     public void onClick(View view) {
+        clearErr();
         TextView tv = (TextView) view;
 
 
@@ -964,9 +1085,10 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         return cell_tvs_indoor.get(0);
     }
 
-    // ADD FUNCTION TO TOGGLE BETWEEN WEEKS -> make the associated backend calls & clear lists
 
     public void toggle(View view) {
+        clearErr();
+
         ImageView iv = (ImageView) view;
         if (outdoorSelected) {
             outdoorSelected = false;
@@ -1144,12 +1266,12 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
             }
 
-            URL url = new URL("http://172.20.10.2:8080/makeReservation");
+            URL url = new URL("http://34.125.226.6:8080/makeReservation");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
 
             if (!newRes) {
-                url = new URL("http://172.20.10.2:8080/editReservation");
+                url = new URL("http://34.125.226.6:8080/editReservation");
                 con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("PUT");
             }
@@ -1213,7 +1335,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                 System.out.println(response.toString());
 
                 TextView err = (TextView) findViewById(R.id.errorMsg);
-                if (response.equals("false")) {
+                if ((response.toString()).equals("false")) {
                     err.setText("Please cancel your current reservation to make a new one.");
                     err.setVisibility(View.VISIBLE);
                 }
@@ -1229,12 +1351,15 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
     }
 
     public void toggle_week(View view) throws IOException {
+        clearErr();
         if (thisWeek) {
 //            cell_tvs = new ArrayList<>();
 //            cell_tvs_indoor = new ArrayList<>();
             ImageView iv = (ImageView) findViewById(R.id.week_toggle);
             iv.setImageResource(R.drawable.next_week);
             thisWeek = false;
+
+
 
             if (android.os.Build.VERSION.SDK_INT > 9) {
                 StrictMode.ThreadPolicy gfgPolicy =
@@ -1259,7 +1384,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             System.out.println(res_week);
 
             boolean isIndoor = true;
-            String url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+            String url_string = "http://34.125.226.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
             URL url = new URL(url_string);
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
@@ -1283,7 +1408,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             System.out.println(avails_indoor);
 
             isIndoor = false;
-            url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+            url_string = "http://34.125.226.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
             url = new URL(url_string);
             con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
@@ -1304,12 +1429,14 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
             putAvailability();
 
+
         }
         else {
             ImageView iv = (ImageView) findViewById(R.id.week_toggle);
             iv.setImageResource(R.drawable.this_week);
 
             thisWeek = true;
+
 
 //            cell_tvs = new ArrayList<>();
 //            cell_tvs_indoor = new ArrayList<>();
@@ -1335,7 +1462,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             System.out.println(res_week);
 
             boolean isIndoor = true;
-            String url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+            String url_string = "http://34.125.226.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
             URL url = new URL(url_string);
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
@@ -1359,7 +1486,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             System.out.println(avails_indoor);
 
             isIndoor = false;
-            url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+            url_string = "http://34.125.226.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
             url = new URL(url_string);
             con = (HttpURLConnection)url.openConnection();
             con.setRequestMethod("GET");
@@ -1378,6 +1505,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
             con.disconnect();
             putAvailability();
+            putPastTimes();
 
         }
     }
@@ -1402,7 +1530,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             StrictMode.setThreadPolicy(gfgPolicy);
         }
         System.out.println("here");
-        String url_string = "http://172.20.10.2:8080/getBuilding?documentId=" + building_name;
+        String url_string = "http://34.125.226.6:8080/getBuilding?documentId=" + building_name;
         URL url = new URL(url_string);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
@@ -1475,7 +1603,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         System.out.println(res_week);
 
         boolean isIndoor = true;
-        String url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+        String url_string = "http://34.125.226.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
         URL url = new URL(url_string);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
@@ -1498,7 +1626,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         System.out.println(avails_indoor);
 
         isIndoor = false;
-        url_string = "http://172.20.10.2:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
+        url_string = "http://34.125.226.6:8080/getBuildingAvailability?buildingName=" + building_name + "&isIndoor=" + isIndoor + "&weekDateStr=" + res_week;
         url = new URL(url_string);
         con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");

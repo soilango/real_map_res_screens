@@ -234,7 +234,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
             StrictMode.setThreadPolicy(gfgPolicy);
         }
         System.out.println("here");
-        URL url = new URL("http://172.20.10.2:8080/getAllBuildings");
+        URL url = new URL("http://34.125.226.6:8080/getAllBuildings");
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
         int status = con.getResponseCode();
