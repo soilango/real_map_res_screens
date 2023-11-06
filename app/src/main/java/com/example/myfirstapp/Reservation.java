@@ -82,9 +82,9 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
     private static final int COLUMN_COUNT = 6;
 
-    private boolean newRes = true;
+    private boolean newRes = false;
 
-    private String uscId = "3333333333";
+    private String uscId = "1111111111";
 
 
     private int findIndexOfCellTextView(TextView tv) {
@@ -197,6 +197,8 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         prevRes = new Gson().fromJson(content.toString(), HashMap.class);
 
 //        populateRes();
+
+        System.out.println("FOUND PREVIOUS RES:" + prevRes);
 
     }
 
@@ -1562,7 +1564,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
                     new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(gfgPolicy);
         }
-        System.out.println("here");
+        System.out.println("GETTING BUILDING AVAILABILITY");
         //getBuildingAvailability?buildingName=Leavey Library&isIndoor=true&weekDateStr=2023-10-30
 //        boolean isIndoor = true;
 //        if (outdoorSelected) {
@@ -1589,11 +1591,19 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
         if (!newRes) {
             String d_string = (String) prevRes.get("date");
             Date date = sdf.parse(d_string);
+            System.out.println("RES DATE IS:" + date);
+
             cal.add(Calendar.DATE, 7);
             Date nextMon = cal.getTime();
-            if (date.compareTo(nextMon) >= 0) {
+            String nextWeekMonday = sdf.format(nextMon);
+            nextMon = sdf.parse(nextWeekMonday);
+
+            System.out.println("COMPARE RES DATE TO NEXT MONDAY:" + nextMon);
+
+            if (date.compareTo(nextMon) < 0) {
                 res_week = sdf.format(nextMon);
                 resWeekThis = false;
+                System.out.println("RES NOT IN THIS WEEK");
             }
 
         }
