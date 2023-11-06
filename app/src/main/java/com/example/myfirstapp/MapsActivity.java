@@ -49,6 +49,14 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -183,7 +191,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         for (int i = 0; i < markerList.size(); i++) {
             Marker mk = markerList.get(i);
             String name = String.valueOf(mk.getTag());
-            System.out.println(selected_name);
+//            System.out.println(selected_name);
             if (!name.equals(selected_name)) {
                 mk.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.unselected_marker));
             }
@@ -233,7 +241,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                     new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(gfgPolicy);
         }
-        System.out.println("here");
+//        System.out.println("here");
         URL url = new URL("http://34.125.226.6:8080/getAllBuildings");
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("GET");
@@ -246,7 +254,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         }
         in.close();
 
-        System.out.println(status);
+//        System.out.println(status);
 
         Gson gson = new Gson();
 

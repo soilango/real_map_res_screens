@@ -84,7 +84,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
     private boolean newRes = false;
 
-    private String uscId = "1111111111";
+    private String uscId = "2222222222";
 
 
     private int findIndexOfCellTextView(TextView tv) {
@@ -112,6 +112,14 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation);
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         Intent intent = getIntent();
         building_name = intent.getStringExtra("building_name");
@@ -226,10 +234,12 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
         for (int i = 0; i < timeBlocks.size(); i++) {
             String st = timeBlocks.get(i);
-            times.add(st.substring(2));
+            times.add(st.substring(2).trim());
         }
 
         List<Integer> rows = new ArrayList<>();
+
+        System.out.println("THE TIMES I HAVE RESERVED: " + times);
 
 
         if ((prevRes.get("indoor").toString()).equals("true")) {
@@ -250,11 +260,15 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
             ImageView iv1 = (ImageView) findViewById(R.id.toggle);
             iv1.setImageResource(R.drawable.indoor_long);
 
+            System.out.println("GOING TO SET COL " + j + " AND THE FOLLOWING ROWS: " + rows);
+
             for (int i = 0; i < rows.size(); i++) {
                 int row = rows.get(i);
                 TextView tv = findTextViewIndoor(row, j);
                 String tv_str = (String) tv.getText();
+                System.out.println("I MADE IT HERE YAYAYY");
                 if (tv_str.equals("")  == false) {
+                    System.out.println("CORRECTLY LOADING UP RES");
                     tv.setBackgroundColor(Color.parseColor("#8A00C2"));
                     tv.getBackground().setAlpha(255);
                     String idx = String.valueOf(row) + "," + String.valueOf(j);
@@ -1407,6 +1421,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 //
             avails_indoor = new Gson().fromJson(content.toString(), HashMap.class);
 
+            System.out.println("INDOOR AVAILABILITIES TOGGLE");
             System.out.println(avails_indoor);
 
             isIndoor = false;
@@ -1425,6 +1440,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
             avails_outdoor = new Gson().fromJson(content.toString(), HashMap.class);
 
+            System.out.println("OUTDOOR AVAILABILITIES TOGGLE");
             System.out.println(avails_outdoor);
 
             con.disconnect();
@@ -1600,7 +1616,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
             System.out.println("COMPARE RES DATE TO NEXT MONDAY:" + nextMon);
 
-            if (date.compareTo(nextMon) < 0) {
+            if (date.compareTo(nextMon) >= 0) {
                 res_week = sdf.format(nextMon);
                 resWeekThis = false;
                 System.out.println("RES NOT IN THIS WEEK");
@@ -1633,6 +1649,8 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 //
         avails_indoor = new Gson().fromJson(content.toString(), HashMap.class);
 
+
+        System.out.println("ALL INDOOR AVAILABILITIES");
         System.out.println(avails_indoor);
 
         isIndoor = false;
@@ -1651,6 +1669,7 @@ public class Reservation extends AppCompatActivity implements View.OnClickListen
 
         avails_outdoor = new Gson().fromJson(content.toString(), HashMap.class);
 
+        System.out.println("ALL OUTDOOR AVAILABILITIES");
         System.out.println(avails_outdoor);
 
         con.disconnect();
